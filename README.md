@@ -72,6 +72,8 @@ npm run dist:win
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 
+2026-10-08에 동일한 `0.1.0-alpha.1` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/WookPost-0.1.0-alpha.1-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.1.0-alpha.1-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
+
 ## 개발 명령
 
 | 명령               | 용도                           |
