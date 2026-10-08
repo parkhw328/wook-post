@@ -2,9 +2,9 @@
 
 Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
 
-**현재 버전: 0.1.0** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**현재 버전: 0.2.0** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
 
-wShell과 주황색 `w` 아이콘·Flexoki Dark 테마를 공유합니다. 영문은 **JetBrains Mono**, 한글은 **Noto Sans KR**를 앱에 포함해 사용합니다. 일반 UI는 16px, URL·코드는 17px, 보조 정보는 최소 14px입니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
+wShell과 구분되는 **파란색 `P` 아이콘**과 Flexoki Dark 테마를 사용합니다. 기본 영문 **JetBrains Mono**, 한글 **Noto Sans KR**를 앱에 포함합니다. 기본 UI 16px, URL·코드 17px, 보조 정보 14px이며 앱 설정에서 글꼴과 크기를 바꿀 수 있습니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
 
 ![로컬 API 요청과 JSON 응답 화면](docs/screenshots/desktop-response.png)
 
@@ -31,10 +31,20 @@ npm run demo:server
 - JSON, 텍스트, `application/x-www-form-urlencoded` 본문.
 - Bearer Token / Basic Auth, `{{baseUrl}}` 형태의 환경 변수.
 - 컬렉션에 요청 저장, 여러 탭, 검색, 요청 취소·시간 제한·리다이렉트 설정.
+- 컬렉션 이름 변경·삭제, 삭제할 때 포함된 요청의 보존 여부 선택.
+- 영문·한글 글꼴 선택, 전체 글자 크기 80–150% 조절, 미리보기·취소·기본값 복원.
 - 응답 상태·소요 시간·크기·헤더·JSON Pretty/Raw, 응답 복사와 원본 바이트 내보내기. JSON 정렬은 큰 정수·소수 표기·중복 키를 그대로 보존합니다.
 - 로컬 SQLite 히스토리와 요청 재열기. 기록은 자동 삭제하지 않으며 100건씩 불러옵니다.
 - 전체 백업, 히스토리, 단일 요청·응답 JSON 가져오기/내보내기.
 - Postman Collection v2.0/v2.1 가져오기 및 v2.1 내보내기.
+
+## 컬렉션과 화면 설정
+
+컬렉션 이름 오른쪽의 **연필**로 이름을 바꾸고 **휴지통**으로 삭제합니다. 삭제 기본값은 요청을 **분류하지 않은 요청**으로 옮기는 방식입니다. **포함된 요청도 함께 삭제**를 선택하면 해당 컬렉션의 저장된 요청도 삭제합니다. 히스토리는 유지되며 함께 삭제한 요청의 열린 탭은 미저장 상태로 남아 다시 저장할 수 있습니다.
+
+왼쪽 아래 **앱 설정**에서 영문 글꼴(JetBrains Mono·Consolas·Cascadia Code·Arial), 한글 글꼴(Noto Sans KR·맑은 고딕·돋움), 글자 크기(80–150%)를 선택합니다. 변경은 즉시 미리 볼 수 있고 **설정 저장** 후 재실행해도 유지됩니다. 취소하거나 Esc로 닫으면 이전 설정으로 돌아갑니다. PC에 없는 글꼴은 번들 기본 글꼴로 대체합니다.
+
+화면 설정은 이 PC의 SQLite에 별도로 보관하며 요청·히스토리 백업에는 포함하지 않습니다.
 
 ## 데이터 가져오기와 내보내기
 
@@ -70,24 +80,25 @@ npm ci
 npm run dist:win
 ```
 
-타입·포맷·테스트·번들 빌드 후 `release/wPost-0.1.0-x64-Setup.exe`를 생성하도록 구성했습니다. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
+타입·포맷·테스트·번들 빌드 후 `release/wPost-0.2.0-x64-Setup.exe`를 생성하도록 구성했습니다. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 
-2026-10-08에 `wPost 0.1.0` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/wPost-0.1.0-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.1.0-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
+2026-10-08에 `wPost 0.2.0` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/wPost-0.2.0-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.2.0-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
 
 ## 개발 명령
 
-| 명령               | 용도                           |
-| ------------------ | ------------------------------ |
-| `npm run dev`      | Electron 개발 실행             |
-| `npm run build`    | 타입 검사와 프로덕션 번들 생성 |
-| `npm start`        | 빌드된 데스크톱 앱 실행        |
-| `npm test`         | 통신·저장·변환 테스트          |
-| `npm run test:e2e` | 실제 Electron 창으로 기능 검증 |
-| `npm run check`    | 타입·Prettier·테스트 확인      |
-| `npm run format`   | 소스·문서 포맷 정리            |
-| `npm run dist:win` | Windows x64 로컬 설치기 빌드   |
+| 명령                  | 용도                                         |
+| --------------------- | -------------------------------------------- |
+| `npm run dev`         | Electron 개발 실행                           |
+| `npm run build`       | 타입 검사와 프로덕션 번들 생성               |
+| `npm start`           | 빌드된 데스크톱 앱 실행                      |
+| `npm test`            | 통신·저장·변환 테스트                        |
+| `npm run test:e2e`    | 실제 Electron 창으로 기능 검증               |
+| `npm run check`       | 타입·Prettier·테스트 확인                    |
+| `npm run format`      | 소스·문서 포맷 정리                          |
+| `npm run dist:win`    | Windows x64 로컬 설치기 빌드                 |
+| `npm run icons:build` | SVG에서 PNG·ICO 재생성 (`rsvg-convert` 필요) |
 
 디스플레이 없는 Linux 테스트 환경에서는 `xvfb-run -a npm run test:e2e`를 사용합니다. 루트 컨테이너의 테스트 실행에만 샌드박스 예외를 적용하며 일반 앱 실행 설정에는 적용하지 않습니다.
 
@@ -99,9 +110,9 @@ src/preload/    화면에 공개하는 제한된 데스크톱 API
 src/renderer/   React 화면과 스타일
 src/shared/     데이터 타입과 런타임 검증 스키마
 tests/          실제 HTTP·저장·파일 변환 및 Electron 테스트
-scripts/        Windows 로컬 빌드와 테스트용 API 서버
-build/          wShell과 공유하는 앱·설치기 아이콘
-licenses/       아이콘·테마·번들 글꼴 라이선스
+scripts/        설치기·아이콘 빌드와 테스트용 API 서버
+build/          wPost 전용 SVG·PNG·ICO 아이콘
+licenses/       디자인 참조·테마·번들 글꼴 라이선스
 resources/      사용자 요구사항 원본
 rules/rules.md  작업 원칙과 진행 기록
 docs/           제품 조사와 배포 절차
@@ -113,4 +124,4 @@ TypeScript strict 모드, 2칸 들여쓰기, Prettier를 사용합니다. 컴포
 
 공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 디자인 자산 라이선스**로 확인할 수 있습니다.
 
-`0.1.0`의 [전체 점검 결과와 수정 내역](docs/reviews/v0.1.0.md)을 확인할 수 있습니다.
+`0.2.0`의 [기능·호환성 점검 결과](docs/reviews/v0.2.0.md)와 `0.1.0`의 [전체 점검 기록](docs/reviews/v0.1.0.md)을 확인할 수 있습니다.

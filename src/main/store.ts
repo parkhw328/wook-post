@@ -1,5 +1,6 @@
 import { DatabaseSync } from 'node:sqlite'
 import { randomUUID } from 'node:crypto'
+import { appearanceSchema, defaultAppearance, type Appearance } from '../shared/appearance'
 import {
   emptyWorkspace,
   historySchema,
@@ -25,6 +26,7 @@ export class Store {
     }
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS workspace (id INTEGER PRIMARY KEY CHECK (id = 1), data TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS appearance (id INTEGER PRIMARY KEY CHECK (id = 1), data TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS history (
         id TEXT PRIMARY KEY, startedAt TEXT NOT NULL, name TEXT NOT NULL, method TEXT NOT NULL,
         url TEXT NOT NULL, status INTEGER, durationMs REAL NOT NULL, error TEXT, data TEXT NOT NULL
@@ -38,6 +40,29 @@ export class Store {
     const row = this.db.prepare('SELECT data FROM workspace WHERE id = 1').get() as
       { data: string } | undefined
     return row ? workspaceSchema.parse(JSON.parse(row.data)) : emptyWorkspace()
+  }
+
+  getAppearance(): Appearance {
+    const row = this.db.prepare('SELECT data FROM appearance WHERE id = 1').get() as
+      { data: string } | undefined
+    if (row) {
+      try {
+        return appearanceSchema.parse(JSON.parse(row.data))
+      } catch {
+        // An unreadable display preference must not prevent access to saved requests.
+      }
+    }
+    return { ...defaultAppearance }
+  }
+
+  saveAppearance(input: unknown): Appearance {
+    const appearance = appearanceSchema.parse(input)
+    this.db
+      .prepare(
+        'INSERT INTO appearance VALUES (1, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data',
+      )
+      .run(JSON.stringify(appearance))
+    return appearance
   }
 
   saveWorkspace(input: Workspace) {

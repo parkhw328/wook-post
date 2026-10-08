@@ -54,6 +54,8 @@ function handle(channel: string, action: (...args: any[]) => unknown) {
 
 function registerHandlers() {
   handle('workspace:load', () => store.state())
+  handle('appearance:load', () => store.getAppearance())
+  handle('appearance:save', (input: unknown) => store.saveAppearance(input))
   handle('workspace:save', (input: unknown) => {
     store.saveWorkspace(workspaceSchema.parse(input))
     return store.state()

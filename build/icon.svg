@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>wPost</title>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="#205e86"/>
+  <path d="M72 204V52h65c37 0 59 21 59 54s-22 54-59 54h-29v44zm36-78h27c17 0 25-7 25-20s-8-20-25-20h-27z" fill="#fffcf0" fill-rule="evenodd"/>
+</svg>

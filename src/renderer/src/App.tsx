@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
@@ -17,6 +17,7 @@ import {
   History,
   Layers3,
   LoaderCircle,
+  Pencil,
   Plus,
   Save,
   Search,
@@ -38,12 +39,15 @@ import type {
 } from '../../shared/contracts'
 import { emptyWorkspace, METHODS, newPair, newRequest } from '../../shared/models'
 import { formatJson } from '../../shared/json'
+import { deleteCollection, renameCollection } from '../../shared/collections'
+import { appearanceFontFamily, defaultAppearance, type Appearance } from '../../shared/appearance'
+import { AppearanceSettings } from './AppearanceSettings'
 import { formatBytes, JsonView, Modal, PairEditor } from './components'
 import brandIcon from '../../../build/icon.png'
 import flexokiLicense from '../../../licenses/Flexoki-MIT.txt?raw'
 import fontLicense from '../../../licenses/JetBrainsMono-OFL.txt?raw'
 import koreanFontLicense from '../../../licenses/NotoSansKR-OFL.txt?raw'
-import iconLicense from '../../../licenses/wShell-MIT.txt?raw'
+import wShellLicense from '../../../licenses/wShell-MIT.txt?raw'
 
 type Tab = { draft: RequestDraft; baseline: string; response: HistoryEntry | null }
 type EditorSection = 'params' | 'headers' | 'body' | 'auth' | 'settings'
@@ -68,7 +72,15 @@ export function App() {
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null)
   const [modal, setModal] = useState<
-    'save' | 'collection' | 'environments' | 'export' | 'about' | 'licenses' | null
+    | 'save'
+    | 'collection'
+    | 'deleteCollection'
+    | 'appearance'
+    | 'environments'
+    | 'export'
+    | 'about'
+    | 'licenses'
+    | null
   >(null)
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null)
   const [confirm, setConfirm] = useState<{
@@ -78,6 +90,13 @@ export function App() {
   } | null>(null)
   const [name, setName] = useState('')
   const [collectionId, setCollectionId] = useState('')
+  const [collectionTargetId, setCollectionTargetId] = useState<string | null>(null)
+  const [deleteCollectionRequests, setDeleteCollectionRequests] = useState(false)
+  const [appearance, setAppearance] = useState<Appearance>(defaultAppearance)
+  const [appearanceDraft, setAppearanceDraft] = useState<Appearance>(defaultAppearance)
+  const [appearanceReady, setAppearanceReady] = useState(false)
+  const [savingAppearance, setSavingAppearance] = useState(false)
+  const appearanceBusy = useRef(false)
   const [exportScope, setExportScope] = useState<ExportOptions['scope']>('workspace')
   const [responseSection, setResponseSection] = useState<'body' | 'headers'>('body')
   const [pretty, setPretty] = useState(true)
@@ -97,6 +116,15 @@ export function App() {
   const activeEnvironment = state.workspace.environments.find(
     (item) => item.id === state.workspace.activeEnvironmentId,
   )
+  const targetCollection = state.workspace.collections.find(
+    (item) => item.id === collectionTargetId,
+  )
+  const displayedAppearance = modal === 'appearance' ? appearanceDraft : appearance
+  useLayoutEffect(() => {
+    const style = document.documentElement.style
+    style.setProperty('--ui-scale', String(displayedAppearance.scale / 100))
+    style.setProperty('--mono', appearanceFontFamily(displayedAppearance))
+  }, [displayedAppearance])
   const notify = useCallback((text: string, error = false) => setMessage({ text, error }), [])
   const fail = useCallback(
     (error: unknown) =>
@@ -125,6 +153,11 @@ export function App() {
       .info()
       .then((info) => setDataPath(info.dataPath))
       .catch(fail)
+    window.wook
+      .loadAppearance()
+      .then(setAppearance)
+      .catch(fail)
+      .finally(() => setAppearanceReady(true))
   }, [fail, notify])
   useEffect(() => {
     if (!message || message.error) return
@@ -218,6 +251,74 @@ export function App() {
       )
       setModal(null)
       notify('요청을 컬렉션에 저장했습니다.')
+    }
+  }
+  const saveCollection = async () => {
+    if (!name.trim()) return
+    try {
+      const workspace = collectionTargetId
+        ? renameCollection(state.workspace, collectionTargetId, name)
+        : {
+            ...state.workspace,
+            collections: [
+              ...state.workspace.collections,
+              { id: crypto.randomUUID(), name: name.trim() },
+            ],
+          }
+      if (await persist(workspace)) {
+        setModal(null)
+        notify(collectionTargetId ? '컬렉션 이름을 변경했습니다.' : '컬렉션을 만들었습니다.')
+      }
+    } catch (error) {
+      fail(error)
+    }
+  }
+  const removeCollection = async () => {
+    if (!targetCollection) return
+    const id = targetCollection.id
+    const removedIds = new Set(
+      state.workspace.requests.filter((item) => item.collectionId === id).map((item) => item.id),
+    )
+    try {
+      if (!(await persist(deleteCollection(state.workspace, id, deleteCollectionRequests)))) return
+      setTabs((items) =>
+        items.map((tab) => {
+          const nextDraft =
+            tab.draft.collectionId === id ? { ...tab.draft, collectionId: null } : tab.draft
+          let baseline = tab.baseline
+          if (deleteCollectionRequests && removedIds.has(tab.draft.id)) baseline = ''
+          else if (baseline) {
+            const original = JSON.parse(baseline) as RequestDraft
+            if (original.collectionId === id)
+              baseline = JSON.stringify({ ...original, collectionId: null })
+          }
+          return { ...tab, draft: nextDraft, baseline }
+        }),
+      )
+      setCollapsed((ids) => ids.filter((value) => value !== id))
+      setModal(null)
+      notify(
+        deleteCollectionRequests
+          ? '컬렉션과 저장된 요청을 삭제했습니다. 열린 요청 탭과 히스토리는 유지됩니다.'
+          : '컬렉션을 삭제했습니다. 요청은 분류하지 않은 요청으로 이동했습니다.',
+      )
+    } catch (error) {
+      fail(error)
+    }
+  }
+  const saveAppearance = async () => {
+    if (appearanceBusy.current) return
+    appearanceBusy.current = true
+    setSavingAppearance(true)
+    try {
+      setAppearance(await window.wook.saveAppearance(appearanceDraft))
+      setModal(null)
+      notify('글꼴과 글자 크기를 저장했습니다.')
+    } catch (error) {
+      fail(error)
+    } finally {
+      appearanceBusy.current = false
+      setSavingAppearance(false)
     }
   }
   const send = async () => {
@@ -421,8 +522,13 @@ export function App() {
           <div className="rail-spacer" />
           <button
             className="rail-button"
-            onClick={() => setModal('about')}
-            aria-label="설정 및 정보"
+            disabled={!appearanceReady}
+            onClick={() => {
+              setAppearanceDraft({ ...appearance })
+              setModal('appearance')
+            }}
+            aria-label="앱 설정"
+            title="앱 설정"
           >
             <Settings2 size={20} />
           </button>
@@ -476,8 +582,10 @@ export function App() {
             {sidebar === 'collections' ? (
               <button
                 className="icon-button"
+                disabled={!ready || working}
                 onClick={() => {
                   setName('')
+                  setCollectionTargetId(null)
                   setModal('collection')
                 }}
                 aria-label="컬렉션 추가"
@@ -500,31 +608,61 @@ export function App() {
               <>
                 {state.workspace.collections.map((collection) => (
                   <div key={collection.id} className="collection-group">
-                    <button
-                      className="collection-heading"
-                      onClick={() =>
-                        setCollapsed((values) =>
-                          values.includes(collection.id)
-                            ? values.filter((id) => id !== collection.id)
-                            : [...values, collection.id],
-                        )
-                      }
-                    >
-                      {collapsed.includes(collection.id) ? (
-                        <ChevronRight size={14} />
-                      ) : (
-                        <ChevronDown size={14} />
-                      )}
-                      <Folder size={15} />
-                      <span className="ellipsis">{collection.name}</span>
-                      <small>
-                        {
-                          state.workspace.requests.filter(
-                            (item) => item.collectionId === collection.id,
-                          ).length
+                    <div className="collection-header">
+                      <button
+                        className="collection-heading"
+                        title={collection.name}
+                        aria-expanded={!collapsed.includes(collection.id)}
+                        onClick={() =>
+                          setCollapsed((values) =>
+                            values.includes(collection.id)
+                              ? values.filter((id) => id !== collection.id)
+                              : [...values, collection.id],
+                          )
                         }
-                      </small>
-                    </button>
+                      >
+                        {collapsed.includes(collection.id) ? (
+                          <ChevronRight size={14} />
+                        ) : (
+                          <ChevronDown size={14} />
+                        )}
+                        <Folder size={15} />
+                        <span className="ellipsis">{collection.name}</span>
+                        <small>
+                          {
+                            state.workspace.requests.filter(
+                              (item) => item.collectionId === collection.id,
+                            ).length
+                          }
+                        </small>
+                      </button>
+                      <button
+                        className="icon-button collection-action"
+                        disabled={working}
+                        aria-label={`${collection.name} 컬렉션 이름 변경`}
+                        title="컬렉션 이름 변경"
+                        onClick={() => {
+                          setCollectionTargetId(collection.id)
+                          setName(collection.name)
+                          setModal('collection')
+                        }}
+                      >
+                        <Pencil size={15} />
+                      </button>
+                      <button
+                        className="icon-button collection-action"
+                        disabled={working}
+                        aria-label={`${collection.name} 컬렉션 삭제`}
+                        title="컬렉션 삭제"
+                        onClick={() => {
+                          setCollectionTargetId(collection.id)
+                          setDeleteCollectionRequests(false)
+                          setModal('deleteCollection')
+                        }}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                     {!collapsed.includes(collection.id) &&
                       filteredRequests
                         .filter((item) => item.collectionId === collection.id)
@@ -1184,21 +1322,19 @@ export function App() {
       )}
 
       {(modal === 'save' || modal === 'collection') && (
-        <Modal title={modal === 'save' ? '요청 저장' : '새 컬렉션'} onClose={() => setModal(null)}>
+        <Modal
+          title={
+            modal === 'save' ? '요청 저장' : collectionTargetId ? '컬렉션 이름 변경' : '새 컬렉션'
+          }
+          onClose={() => {
+            if (!working) setModal(null)
+          }}
+        >
           <form
             onSubmit={(event) => {
               event.preventDefault()
               if (modal === 'save') void saveRequest()
-              else if (name.trim())
-                void persist({
-                  ...state.workspace,
-                  collections: [
-                    ...state.workspace.collections,
-                    { id: crypto.randomUUID(), name: name.trim() },
-                  ],
-                }).then((ok) => {
-                  if (ok) setModal(null)
-                })
+              else void saveCollection()
             }}
           >
             <label className="field-label">
@@ -1211,6 +1347,7 @@ export function App() {
                 onChange={(event) => setName(event.target.value)}
                 maxLength={200}
                 required
+                disabled={working}
               />
             </label>
             {modal === 'save' && (
@@ -1232,7 +1369,12 @@ export function App() {
               </label>
             )}
             <div className="modal-actions">
-              <button type="button" className="secondary-button" onClick={() => setModal(null)}>
+              <button
+                type="button"
+                className="secondary-button"
+                disabled={working}
+                onClick={() => setModal(null)}
+              >
                 취소
               </button>
               <button className="primary-button" disabled={working || !name.trim()} type="submit">
@@ -1241,6 +1383,61 @@ export function App() {
             </div>
           </form>
         </Modal>
+      )}
+      {modal === 'deleteCollection' && targetCollection && (
+        <Modal
+          title="컬렉션 삭제"
+          onClose={() => {
+            if (!working) setModal(null)
+          }}
+        >
+          <p className="modal-description">
+            <strong>{targetCollection.name}</strong> 컬렉션을 삭제할까요?
+          </p>
+          <p className="modal-description">
+            포함된 요청{' '}
+            {
+              state.workspace.requests.filter((item) => item.collectionId === targetCollection.id)
+                .length
+            }
+            개는 기본적으로 분류하지 않은 요청으로 이동합니다.
+          </p>
+          <label className="collection-delete-option">
+            <input
+              type="checkbox"
+              checked={deleteCollectionRequests}
+              disabled={working}
+              onChange={(event) => setDeleteCollectionRequests(event.target.checked)}
+            />
+            포함된 요청도 함께 삭제
+          </label>
+          <p className="field-hint">
+            히스토리는 유지됩니다. 함께 삭제한 요청이 열려 있다면 미저장 탭으로 남습니다.
+          </p>
+          <div className="modal-actions">
+            <button className="secondary-button" disabled={working} onClick={() => setModal(null)}>
+              취소
+            </button>
+            <button
+              className="danger-button"
+              disabled={working}
+              onClick={() => void removeCollection()}
+            >
+              컬렉션 삭제
+            </button>
+          </div>
+        </Modal>
+      )}
+      {modal === 'appearance' && (
+        <AppearanceSettings
+          value={appearanceDraft}
+          onChange={setAppearanceDraft}
+          onSave={() => void saveAppearance()}
+          onClose={() => {
+            if (!appearanceBusy.current) setModal(null)
+          }}
+          saving={savingAppearance}
+        />
       )}
       {modal === 'environments' && (
         <Modal title="환경 변수" onClose={() => setModal(null)} wide>
@@ -1482,12 +1679,12 @@ export function App() {
       {modal === 'licenses' && (
         <Modal title="디자인 자산 라이선스" onClose={() => setModal(null)} wide>
           <p className="modal-description">
-            wPost는 wShell의 아이콘과 Flexoki Dark 테마를 사용합니다. 영문은 JetBrains Mono, 한글은
-            Noto Sans KR로 표시하며 아이콘과 글꼴은 원본 그대로 포함했습니다.
+            wPost는 전용 P 아이콘과 Flexoki Dark 테마를 사용합니다. 기본 영문 글꼴 JetBrains Mono와
+            한글 글꼴 Noto Sans KR은 원본 그대로 포함했습니다.
           </p>
           <div className="license-list">
             {[
-              ['wShell 아이콘 · MIT', iconLicense],
+              ['wShell 디자인 참조 · MIT', wShellLicense],
               ['Flexoki 색상 · MIT', flexokiLicense],
               ['JetBrains Mono · SIL Open Font License 1.1', fontLicense],
               ['Noto Sans KR · SIL Open Font License 1.1', koreanFontLicense],

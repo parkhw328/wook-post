@@ -1,6 +1,6 @@
 {
   "name": "wook-post",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "wPost — a local desktop HTTP client for Windows",
   "main": "out/main/index.js",
   "author": {
@@ -23,6 +23,7 @@
     "format:check": "prettier --check src tests scripts *.json *.ts *.yml README.md CHANGELOG.md THIRD_PARTY_NOTICES.md docs rules",
     "check": "npm run typecheck && npm run format:check && npm test",
     "dist:win": "node scripts/build-windows.mjs",
+    "icons:build": "node scripts/build-icons.mjs",
     "demo:server": "node scripts/demo-server.mjs"
   },
   "dependencies": {

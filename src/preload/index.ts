@@ -3,6 +3,8 @@ import type { DesktopApi } from '../shared/contracts'
 
 const api: DesktopApi = {
   load: () => ipcRenderer.invoke('workspace:load'),
+  loadAppearance: () => ipcRenderer.invoke('appearance:load'),
+  saveAppearance: (appearance) => ipcRenderer.invoke('appearance:save', appearance),
   saveWorkspace: (workspace) => ipcRenderer.invoke('workspace:save', workspace),
   send: (request, operationId) => ipcRenderer.invoke('request:send', request, operationId),
   cancel: (operationId) => ipcRenderer.invoke('request:cancel', operationId),

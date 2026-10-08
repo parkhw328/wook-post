@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { METHODS, MAX_BODY_BYTES } from './models'
+import type { Appearance } from './appearance'
 export {
   METHODS,
   MAX_BODY_BYTES,
@@ -140,6 +141,8 @@ export type ExportOptions = {
 }
 export type DesktopApi = {
   load: () => Promise<AppState>
+  loadAppearance: () => Promise<Appearance>
+  saveAppearance: (appearance: Appearance) => Promise<Appearance>
   saveWorkspace: (workspace: Workspace) => Promise<AppState>
   send: (request: RequestDraft, operationId: string) => Promise<HistoryEntry>
   cancel: (operationId: string) => Promise<void>

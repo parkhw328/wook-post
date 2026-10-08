@@ -1,10 +1,12 @@
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { DatabaseSync } from 'node:sqlite'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { Store } from '../src/main/store'
 import { backupSchema, emptyWorkspace, newPair, newRequest } from '../src/shared/contracts'
 import { backupFor, historyEntry } from './fixtures'
+import { defaultAppearance } from '../src/shared/appearance'
 
 let directory: string
 let store: Store
@@ -18,6 +20,50 @@ afterEach(() => {
 })
 
 describe('local persistence', () => {
+  it('defaults appearance on an existing database and retains saved preferences across restarts', () => {
+    const workspace = { ...emptyWorkspace(), requests: [newRequest()] }
+    store.saveWorkspace(workspace)
+    store.addHistory(historyEntry())
+    store.close()
+    const db = new DatabaseSync(join(directory, 'test.sqlite'))
+    db.exec('DROP TABLE appearance')
+    db.close()
+    store = new Store(join(directory, 'test.sqlite'))
+    expect(store.getAppearance()).toEqual(defaultAppearance)
+    const appearance = { scale: 125, latinFont: 'consolas', koreanFont: 'malgun' } as const
+    store.saveAppearance(appearance)
+    store.close()
+    store = new Store(join(directory, 'test.sqlite'))
+    expect(store.getAppearance()).toEqual(appearance)
+    expect(store.getWorkspace()).toEqual(workspace)
+    expect(store.state().historyTotal).toBe(1)
+    store.importBackup(backupFor())
+    expect(store.getAppearance()).toEqual(appearance)
+  })
+  it('rejects invalid appearance preferences without replacing the saved settings', () => {
+    store.saveAppearance({ ...defaultAppearance, scale: 120 })
+    for (const patch of [
+      { scale: 79 },
+      { scale: 151 },
+      { scale: 100.5 },
+      { latinFont: 'url(font)' },
+      { koreanFont: 'unknown' },
+    ]) {
+      expect(() => store.saveAppearance({ ...defaultAppearance, ...patch })).toThrow()
+      expect(store.getAppearance().scale).toBe(120)
+    }
+  })
+  it('recovers unreadable display preferences without losing saved requests', () => {
+    const workspace = { ...emptyWorkspace(), requests: [newRequest()] }
+    store.saveWorkspace(workspace)
+    const db = new DatabaseSync(join(directory, 'test.sqlite'))
+    db.prepare('INSERT INTO appearance VALUES (1, ?)').run('{broken')
+    expect(store.getAppearance()).toEqual(defaultAppearance)
+    db.prepare('UPDATE appearance SET data = ? WHERE id = 1').run('{"scale": 1000}')
+    expect(store.getAppearance()).toEqual(defaultAppearance)
+    db.close()
+    expect(store.getWorkspace()).toEqual(workspace)
+  })
   it('retains collections, environments and response bytes across restarts', () => {
     const workspace = emptyWorkspace()
     const id = crypto.randomUUID()
