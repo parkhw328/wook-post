@@ -144,6 +144,7 @@ export type DesktopApi = {
   send: (request: RequestDraft, operationId: string) => Promise<HistoryEntry>
   cancel: (operationId: string) => Promise<void>
   getHistory: (id: string) => Promise<HistoryEntry | null>
+  copyResponse: (id: string) => Promise<void>
   listHistory: (offset: number) => Promise<HistorySummary[]>
   clearHistory: () => Promise<AppState>
   previewImport: () => Promise<ImportPreview | null>

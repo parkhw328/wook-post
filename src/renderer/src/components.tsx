@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { Plus, Trash2, X } from 'lucide-react'
 import type { Pair } from '../../shared/contracts'
 import { newPair } from '../../shared/models'
+import { formatJson } from '../../shared/json'
 
 export function Modal({
   title,
@@ -111,7 +112,7 @@ export function JsonView({ text, pretty }: { text: string; pretty: boolean }) {
   let rendered = text
   if (pretty) {
     try {
-      rendered = JSON.stringify(JSON.parse(text), null, 2)
+      rendered = formatJson(text)
     } catch {
       /* Plain text stays as received. */
     }

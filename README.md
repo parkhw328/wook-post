@@ -2,9 +2,9 @@
 
 Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
 
-**현재 버전: 0.1.0-alpha.2** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**현재 버전: 0.1.0** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
 
-wShell과 주황색 `w` 아이콘, Flexoki Dark 테마, JetBrains Mono 글꼴을 공유합니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
+wShell과 주황색 `w` 아이콘·Flexoki Dark 테마를 공유합니다. 영문은 **JetBrains Mono**, 한글은 **Noto Sans KR**를 앱에 포함해 사용합니다. 일반 UI는 16px, URL·코드는 17px, 보조 정보는 최소 14px입니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
 
 ![로컬 API 요청과 JSON 응답 화면](docs/screenshots/desktop-response.png)
 
@@ -31,7 +31,7 @@ npm run demo:server
 - JSON, 텍스트, `application/x-www-form-urlencoded` 본문.
 - Bearer Token / Basic Auth, `{{baseUrl}}` 형태의 환경 변수.
 - 컬렉션에 요청 저장, 여러 탭, 검색, 요청 취소·시간 제한·리다이렉트 설정.
-- 응답 상태·소요 시간·크기·헤더·JSON Pretty/Raw와 원본 바이트 내보내기.
+- 응답 상태·소요 시간·크기·헤더·JSON Pretty/Raw, 응답 복사와 원본 바이트 내보내기. JSON 정렬은 큰 정수·소수 표기·중복 키를 그대로 보존합니다.
 - 로컬 SQLite 히스토리와 요청 재열기. 기록은 자동 삭제하지 않으며 100건씩 불러옵니다.
 - 전체 백업, 히스토리, 단일 요청·응답 JSON 가져오기/내보내기.
 - Postman Collection v2.0/v2.1 가져오기 및 v2.1 내보내기.
@@ -70,11 +70,11 @@ npm ci
 npm run dist:win
 ```
 
-타입·포맷·테스트·번들 빌드 후 `release/wPost-0.1.0-alpha.2-x64-Setup.exe`를 생성하도록 구성했습니다. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
+타입·포맷·테스트·번들 빌드 후 `release/wPost-0.1.0-x64-Setup.exe`를 생성하도록 구성했습니다. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 
-2026-10-08에 `wPost 0.1.0-alpha.2` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/wPost-0.1.0-alpha.2-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.1.0-alpha.2-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
+2026-10-08에 `wPost 0.1.0` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/wPost-0.1.0-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.1.0-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
 
 ## 개발 명령
 
@@ -112,3 +112,5 @@ TypeScript strict 모드, 2칸 들여쓰기, Prettier를 사용합니다. 컴포
 [작업 기록](rules/rules.md) · [변경 이력](CHANGELOG.md) · [경쟁 제품 조사](docs/benchmark.md) · [버전·배포 절차](docs/releasing.md)
 
 공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 디자인 자산 라이선스**로 확인할 수 있습니다.
+
+`0.1.0`의 [전체 점검 결과와 수정 내역](docs/reviews/v0.1.0.md)을 확인할 수 있습니다.

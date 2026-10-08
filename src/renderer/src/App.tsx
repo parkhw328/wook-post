@@ -37,10 +37,12 @@ import type {
   Workspace,
 } from '../../shared/contracts'
 import { emptyWorkspace, METHODS, newPair, newRequest } from '../../shared/models'
+import { formatJson } from '../../shared/json'
 import { formatBytes, JsonView, Modal, PairEditor } from './components'
 import brandIcon from '../../../build/icon.png'
 import flexokiLicense from '../../../licenses/Flexoki-MIT.txt?raw'
 import fontLicense from '../../../licenses/JetBrainsMono-OFL.txt?raw'
+import koreanFontLicense from '../../../licenses/NotoSansKR-OFL.txt?raw'
 import iconLicense from '../../../licenses/wShell-MIT.txt?raw'
 
 type Tab = { draft: RequestDraft; baseline: string; response: HistoryEntry | null }
@@ -63,6 +65,7 @@ export function App() {
   const [collapsed, setCollapsed] = useState<string[]>([])
   const [operation, setOperation] = useState<{ id: string; tabId: string } | null>(null)
   const [working, setWorking] = useState(false)
+  const [loadingHistory, setLoadingHistory] = useState(false)
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null)
   const [modal, setModal] = useState<
     'save' | 'collection' | 'environments' | 'export' | 'about' | 'licenses' | null
@@ -83,6 +86,7 @@ export function App() {
   const [dataPath, setDataPath] = useState('')
   const operationRef = useRef(false)
   const workspaceBusy = useRef(false)
+  const historyBusy = useRef(false)
   const current = tabs.find((tab) => tab.draft.id === activeId) ?? tabs[0]
   const draft = current.draft
   const response = current.response?.response
@@ -307,6 +311,29 @@ export function App() {
     setEnvId(state.workspace.activeEnvironmentId ?? state.workspace.environments[0]?.id ?? null)
     setModal('environments')
   }
+  const loadMoreHistory = async () => {
+    if (historyBusy.current) return
+    historyBusy.current = true
+    setLoadingHistory(true)
+    const previousPage = state.history
+    try {
+      const entries = await window.wook.listHistory(previousPage.length)
+      setState((currentState) => {
+        // A send, import or clear may have refreshed the list while this page was loading.
+        if (currentState.history !== previousPage) return currentState
+        const existingIds = new Set(previousPage.map((entry) => entry.id))
+        return {
+          ...currentState,
+          history: [...previousPage, ...entries.filter((entry) => !existingIds.has(entry.id))],
+        }
+      })
+    } catch (error) {
+      fail(error)
+    } finally {
+      historyBusy.current = false
+      setLoadingHistory(false)
+    }
+  }
   const removeRequest = (request: RequestDraft) =>
     setConfirm({
       title: '저장한 요청 삭제',
@@ -348,7 +375,6 @@ export function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-wordmark">wPost</span>
-          <span className="alpha-label">ALPHA</span>
         </div>
         <div className="topbar-right">
           <span className="local-label">
@@ -578,19 +604,10 @@ export function App() {
                 {state.history.length < state.historyTotal && (
                   <button
                     className="load-more"
-                    onClick={() => {
-                      window.wook
-                        .listHistory(state.history.length)
-                        .then((entries) =>
-                          setState((value) => ({
-                            ...value,
-                            history: [...value.history, ...entries],
-                          })),
-                        )
-                        .catch(fail)
-                    }}
+                    disabled={loadingHistory}
+                    onClick={() => void loadMoreHistory()}
                   >
-                    이전 기록 더 보기
+                    {loadingHistory ? '기록 불러오는 중…' : '이전 기록 더 보기'}
                   </button>
                 )}
                 {!!state.historyTotal && (
@@ -834,7 +851,7 @@ export function App() {
                         className="text-button"
                         onClick={() => {
                           try {
-                            updateDraft({ body: JSON.stringify(JSON.parse(draft.body), null, 2) })
+                            updateDraft({ body: formatJson(draft.body) })
                           } catch {
                             notify('JSON 형식을 확인하세요. 환경 변수는 전송 시 치환됩니다.', true)
                           }
@@ -1083,8 +1100,8 @@ export function App() {
                           aria-label="응답 복사"
                           title="응답 복사"
                           onClick={() => {
-                            navigator.clipboard
-                              .writeText(response.bodyText)
+                            window.wook
+                              .copyResponse(current.response!.id)
                               .then(() => notify('응답 본문을 복사했습니다.'))
                               .catch(fail)
                           }}
@@ -1450,8 +1467,7 @@ export function App() {
             </dd>
           </dl>
           <p className="export-notice">
-            초기 알파 버전입니다. 데이터는 로컬 SQLite에 평문으로 저장됩니다. 백업으로 중요한 요청을
-            보관하세요.
+            데이터는 이 기기의 SQLite에 평문으로 저장됩니다. 중요한 요청은 백업으로 보관하세요.
           </p>
           <div className="modal-actions">
             <button className="secondary-button" onClick={() => setModal('licenses')}>
@@ -1466,14 +1482,15 @@ export function App() {
       {modal === 'licenses' && (
         <Modal title="디자인 자산 라이선스" onClose={() => setModal(null)} wide>
           <p className="modal-description">
-            wPost는 wShell의 아이콘, Flexoki Dark 테마와 JetBrains Mono 글꼴을 사용합니다. 아이콘과
-            글꼴은 원본 그대로 포함했습니다.
+            wPost는 wShell의 아이콘과 Flexoki Dark 테마를 사용합니다. 영문은 JetBrains Mono, 한글은
+            Noto Sans KR로 표시하며 아이콘과 글꼴은 원본 그대로 포함했습니다.
           </p>
           <div className="license-list">
             {[
               ['wShell 아이콘 · MIT', iconLicense],
               ['Flexoki 색상 · MIT', flexokiLicense],
               ['JetBrains Mono · SIL Open Font License 1.1', fontLicense],
+              ['Noto Sans KR · SIL Open Font License 1.1', koreanFontLicense],
             ].map(([title, license]) => (
               <details key={title}>
                 <summary>{title}</summary>

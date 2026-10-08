@@ -7,6 +7,7 @@ const api: DesktopApi = {
   send: (request, operationId) => ipcRenderer.invoke('request:send', request, operationId),
   cancel: (operationId) => ipcRenderer.invoke('request:cancel', operationId),
   getHistory: (id) => ipcRenderer.invoke('history:get', id),
+  copyResponse: (id) => ipcRenderer.invoke('response:copy', id),
   listHistory: (offset) => ipcRenderer.invoke('history:list', offset),
   clearHistory: () => ipcRenderer.invoke('history:clear'),
   previewImport: () => ipcRenderer.invoke('file:preview-import'),

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent } from 'electron'
+import { app, BrowserWindow, clipboard, dialog, ipcMain, type IpcMainInvokeEvent } from 'electron'
 import { mkdirSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -80,6 +80,12 @@ function registerHandlers() {
     operations.get(z.string().uuid().parse(id))?.abort()
   })
   handle('history:get', (id: unknown) => store.getHistory(z.string().uuid().parse(id)))
+  handle('response:copy', (id: unknown) => {
+    const entry = store.getHistory(z.string().uuid().parse(id))
+    if (!entry || entry.response.encoding !== 'text')
+      throw new Error('복사할 텍스트 응답을 선택하세요.')
+    clipboard.writeText(entry.response.bodyText)
+  })
   handle('history:list', (offset: unknown) =>
     store.listHistory(z.number().int().min(0).max(1_000_000).parse(offset)),
   )
