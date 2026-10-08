@@ -1,0 +1,13 @@
+:root {
+  color-scheme: dark;
+  --bg: #11151b;
+  --surface: #1a2029;
+  --text: #c6d0dc;
+  --bright: #f0f5f7;
+  --muted: #8997a8;
+  --faint: #627084;
+  --accent: #7dd9b0;
+  --border: #2a313c;
+  --hover: #28303a;
+  --mono: 'Cascadia Code', 'Consolas', 'SFMono-Regular', monospace;
+}

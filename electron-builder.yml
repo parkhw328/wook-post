@@ -1,0 +1,30 @@
+appId: com.parkhw328.wookpost
+productName: Wook Post
+copyright: Copyright © 2026 Hyunwook Park
+directories:
+  output: release
+files:
+  - out/**/*
+  - package.json
+asar: true
+extraResources:
+  - from: build/icon.png
+    to: icon.png
+npmRebuild: false
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: WookPost-${version}-${arch}-Setup.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Wook Post
+  installerLanguages: [ko_KR, en_US]
+  language: '1042'
+  uninstallDisplayName: Wook Post
+  runAfterFinish: true
