@@ -21,7 +21,7 @@ export class Store {
     const version = this.db.prepare('PRAGMA user_version').get() as { user_version: number }
     if (version.user_version > 1) {
       this.db.close()
-      throw new Error('더 최신 Wook Post에서 만든 데이터입니다. 앱을 업데이트하세요.')
+      throw new Error('더 최신 wPost에서 만든 데이터입니다. 앱을 업데이트하세요.')
     }
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS workspace (id INTEGER PRIMARY KEY CHECK (id = 1), data TEXT NOT NULL);

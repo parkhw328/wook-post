@@ -1,7 +1,7 @@
 {
   "name": "wook-post",
-  "version": "0.1.0-alpha.1",
-  "description": "A local desktop HTTP client for Windows",
+  "version": "0.1.0-alpha.2",
+  "description": "wPost — a local desktop HTTP client for Windows",
   "main": "out/main/index.js",
   "author": {
     "name": "Hyunwook Park",
@@ -19,8 +19,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "npm run build && playwright test",
-    "format": "prettier --write src tests scripts *.json *.ts *.yml README.md CHANGELOG.md docs rules",
-    "format:check": "prettier --check src tests scripts *.json *.ts *.yml README.md CHANGELOG.md docs rules",
+    "format": "prettier --write src tests scripts *.json *.ts *.yml README.md CHANGELOG.md THIRD_PARTY_NOTICES.md docs rules",
+    "format:check": "prettier --check src tests scripts *.json *.ts *.yml README.md CHANGELOG.md THIRD_PARTY_NOTICES.md docs rules",
     "check": "npm run typecheck && npm run format:check && npm test",
     "dist:win": "node scripts/build-windows.mjs",
     "demo:server": "node scripts/demo-server.mjs"

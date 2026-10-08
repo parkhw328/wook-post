@@ -77,3 +77,34 @@
 - 타입 검사·프로덕션 번들 빌드 통과. 7-Zip 설치 아카이브 검사 통과. 내부 앱의 x64 PE 형식, ASAR 필수 파일, 제작자·버전 메타데이터 확인.
 - 실제 Windows 설치·실행·제거는 아직 검증하지 않았다. 앱과 설치 파일 모두 코드 서명은 없다.
 - 자세한 환경·재현 명령은 [`docs/builds/v0.1.0-alpha.1-windows.md`](../docs/builds/v0.1.0-alpha.1-windows.md)에 기록한다. 설치 파일과 체크섬 파일은 `release/`에 보관하고 빌드 기록만 Git에 추가한다.
+
+## 2026-10-08 · 0.1.0-alpha.2 wPost 브랜딩
+
+### 요청과 적용 기준
+
+- 사용자 요청에 따라 `/data/project/wook-shell`의 아이콘·이미지·테마를 참조하고 제품 표기를 `wPost`로 변경한다.
+- 참조 커밋: `970b131099ca3905607cc19ec60106af529adb4c`. wShell 저장소와 기존 `AGENTS.md`는 변경하지 않는다.
+- 원본 주황색 `w` PNG/ICO, Flexoki Dark 색상, JetBrains Mono Regular/Bold를 적용한다. 헤더는 wShell처럼 텍스트 워드마크로 표시한다.
+- 색상은 `theme.css`의 공통 토큰으로 관리한다. 강조·선택은 주황색, 성공·실패·문법 색상은 의미별로 구분한다.
+- 아이콘·글꼴은 수정하지 않고 복사하며 원본 라이선스를 앱과 저장소에 포함한다. 앱 정보에서 디자인 자산 라이선스를 열람할 수 있다.
+- 상세 규칙: [`docs/branding.md`](../docs/branding.md), [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).
+
+### 호환성과 버전
+
+- 앱·설치기·바로가기·내보내기 기본 이름을 `wPost`로 통일한다.
+- `appId: com.parkhw328.wookpost`, `%APPDATA%/Wook Post/wook-post.sqlite`, 백업 `format: wook-post` / `schemaVersion: 1`은 유지한다.
+- 앱 이름 변경으로 빈 저장소가 생기지 않도록 기존 사용자 데이터 경로를 명시적으로 지정한다.
+- 버전: `0.1.0-alpha.2`; 작업 브랜치: `feat/v0.1.0-alpha.2-wpost-branding`; 태그: `v0.1.0-alpha.2`.
+- 설치 파일: `release/wPost-0.1.0-alpha.2-x64-Setup.exe`. 이전 alpha.1 설치 파일은 별도로 유지한다.
+
+### 검증
+
+- `npm run check` 통과: 타입·포맷 검사와 단위/통합 테스트 24개.
+- Xvfb의 실제 Electron UI 시나리오 2개 통과. 요청·응답, 저장, 재시작, 백업, 가져오기, 취소, 인증·환경 변수·바이너리 내보내기 확인.
+- Linux alpha.1 패키지에서 컬렉션·환경·요청을 저장하고 실제 로컬 HTTP 응답을 기록했다. 같은 사용자 데이터 위치로 alpha.2를 실행해 워크스페이스와 응답 원본이 동일함을 확인했다.
+- alpha.1이 내보낸 JSON을 alpha.2에서 가져와 요청이 추가되고 히스토리는 중복되지 않음을 확인했다.
+- 두 글꼴의 실제 로딩, 앱 정보의 아이콘·라이선스 열람, 1000×700 및 1440×940 화면을 확인했다.
+- 실제 Windows 설치·업그레이드·삭제는 사용자 검증 범위로 남긴다.
+- 로컬 Docker에서 새 Windows x64 NSIS 설치기를 생성했다. 크기는 113,926,145바이트 (108.65 MiB), SHA-256은 `47e952616949179272718c6ab5a6d4eed27188ac807285683216307d33cf00dd`이다.
+- 설치 아카이브 무결성, x64 실행 파일, 제작자·버전 메타데이터, 앱과 설치기의 원본 아이콘 7종, 번들 글꼴·라이선스 포함을 확인했다. 코드 서명은 적용하지 않았다.
+- 재현 명령과 전체 확인 결과는 [`docs/builds/v0.1.0-alpha.2-windows.md`](../docs/builds/v0.1.0-alpha.2-windows.md)에 기록한다.

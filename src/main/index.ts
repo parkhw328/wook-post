@@ -99,7 +99,7 @@ function registerHandlers() {
   handle('file:preview-import', async () => {
     pendingImport = null
     const result = await dialog.showOpenDialog(window!, {
-      title: 'Wook Post 백업 / Postman 컬렉션 가져오기',
+      title: 'wPost 백업 / Postman 컬렉션 가져오기',
       properties: ['openFile'],
       filters: [{ name: 'JSON', extensions: ['json'] }],
     })
@@ -168,7 +168,7 @@ function registerHandlers() {
     const raw = options.scope === 'body'
     const result = await dialog.showSaveDialog(window!, {
       title: raw ? '응답 본문 저장' : '데이터 내보내기',
-      defaultPath: `wook-post-${options.scope}-${new Date().toISOString().slice(0, 10)}.${raw ? 'bin' : 'json'}`,
+      defaultPath: `wPost-${options.scope}-${new Date().toISOString().slice(0, 10)}.${raw ? 'bin' : 'json'}`,
       filters: raw
         ? [{ name: '모든 파일', extensions: ['*'] }]
         : [{ name: 'JSON', extensions: ['json'] }],
@@ -186,11 +186,11 @@ function createWindow() {
     height: 940,
     minWidth: 1000,
     minHeight: 700,
-    title: 'Wook Post',
+    title: 'wPost',
     icon: app.isPackaged
       ? join(process.resourcesPath, 'icon.png')
       : join(app.getAppPath(), 'build/icon.png'),
-    backgroundColor: '#101217',
+    backgroundColor: '#100f0f',
     show: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -227,7 +227,9 @@ function createWindow() {
   else void window.loadFile(rendererFile)
 }
 
-app.setName('Wook Post')
+app.setName('wPost')
+// Keep the pre-branding location so an upgrade opens the existing database.
+app.setPath('userData', join(app.getPath('appData'), 'Wook Post'))
 app.setAppUserModelId('com.parkhw328.wookpost')
 if (!app.isPackaged && process.env.WOOK_POST_TEST_DATA_DIR)
   app.setPath('userData', process.env.WOOK_POST_TEST_DATA_DIR)
@@ -250,10 +252,7 @@ else {
       })
     })
     .catch((error: unknown) => {
-      dialog.showErrorBox(
-        'Wook Post 시작 실패',
-        error instanceof Error ? error.message : String(error),
-      )
+      dialog.showErrorBox('wPost 시작 실패', error instanceof Error ? error.message : String(error))
       app.quit()
     })
 }

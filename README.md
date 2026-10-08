@@ -1,8 +1,10 @@
-# Wook Post
+# wPost
 
 Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
 
-**현재 버전: 0.1.0-alpha.1** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**현재 버전: 0.1.0-alpha.2** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+
+wShell과 주황색 `w` 아이콘, Flexoki Dark 테마, JetBrains Mono 글꼴을 공유합니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
 
 ![로컬 API 요청과 JSON 응답 화면](docs/screenshots/desktop-response.png)
 
@@ -42,15 +44,15 @@ npm run demo:server
 
 | 형식                                  | 보존 범위                                                                  |
 | ------------------------------------- | -------------------------------------------------------------------------- |
-| Wook Post JSON (`schemaVersion: 1`)   | 요청, 환경, 컬렉션, 요청·응답 기록, 원본 응답 바이트, 시간·크기            |
+| wPost JSON (`schemaVersion: 1`)       | 요청, 환경, 컬렉션, 요청·응답 기록, 원본 응답 바이트, 시간·크기            |
 | Postman Collection v2.0/v2.1 가져오기 | 요청, 폴더 경로, 쿼리·헤더, raw/urlencoded 본문, Bearer/Basic, 컬렉션 변수 |
 | Postman Collection v2.1 내보내기      | 저장한 요청, 컬렉션 폴더, 현재 활성 환경의 변수                            |
 
-Postman 중첩 폴더는 요청 이름에 경로로 보존합니다. 스크립트는 실행하거나 가져오지 않으며 미리보기에 알립니다. multipart·파일 본문, Postman 경로 변수, OAuth 등 미지원 인증은 가져오기를 중단합니다. Postman 파일에는 Wook Post의 히스토리·타임아웃·리다이렉트 설정이 보존되지 않으므로 전체 이전은 Wook Post 백업을 사용하세요.
+Postman 중첩 폴더는 요청 이름에 경로로 보존합니다. 스크립트는 실행하거나 가져오지 않으며 미리보기에 알립니다. multipart·파일 본문, Postman 경로 변수, OAuth 등 미지원 인증은 가져오기를 중단합니다. Postman 파일에는 wPost의 히스토리·타임아웃·리다이렉트 설정이 보존되지 않으므로 전체 이전은 wPost 백업을 사용하세요.
 
 ## 저장 위치와 한도
 
-앱의 **정보** 화면에서 실제 데이터 경로를 확인할 수 있습니다. Windows 기본 경로는 `%APPDATA%/Wook Post/wook-post.sqlite`이며 설치 파일과 분리됩니다. SQLite WAL 파일이 있을 수 있으므로 실행 중인 DB 파일을 직접 복사하기보다 앱의 백업 기능을 사용하세요.
+앱의 **정보** 화면에서 실제 데이터 경로를 확인할 수 있습니다. Windows 기본 경로는 `%APPDATA%/Wook Post/wook-post.sqlite`이며 설치 파일과 분리됩니다. wPost로 이름을 바꾼 뒤에도 기존 데이터를 이어 쓰도록 이 경로를 유지합니다. SQLite WAL 파일이 있을 수 있으므로 실행 중인 DB 파일을 직접 복사하기보다 앱의 백업 기능을 사용하세요.
 
 - 토큰·비밀번호·쿠키·응답은 **평문**으로 로컬 저장소와 백업에 포함될 수 있습니다.
 - 실행 기록에는 전송 시 치환한 환경 변수 값이 저장되어 환경 변경 후에도 같은 요청을 재사용할 수 있습니다.
@@ -68,11 +70,11 @@ npm ci
 npm run dist:win
 ```
 
-타입·포맷·테스트·번들 빌드 후 `release/WookPost-0.1.0-alpha.1-x64-Setup.exe`를 생성하도록 구성했습니다. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
+타입·포맷·테스트·번들 빌드 후 `release/wPost-0.1.0-alpha.2-x64-Setup.exe`를 생성하도록 구성했습니다. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 
-2026-10-08에 동일한 `0.1.0-alpha.1` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/WookPost-0.1.0-alpha.1-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.1.0-alpha.1-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
+2026-10-08에 `wPost 0.1.0-alpha.2` 소스로 Windows x64 설치 파일을 로컬 Docker에서 생성했습니다. 작업 공간의 `release/wPost-0.1.0-alpha.2-x64-Setup.exe`와 `.exe.sha256` 파일을 사용할 수 있습니다. [빌드 기록과 체크섬](docs/builds/v0.1.0-alpha.2-windows.md)을 참고하세요. 설치 파일 자체는 Git에 포함하지 않습니다.
 
 ## 개발 명령
 
@@ -98,7 +100,8 @@ src/renderer/   React 화면과 스타일
 src/shared/     데이터 타입과 런타임 검증 스키마
 tests/          실제 HTTP·저장·파일 변환 및 Electron 테스트
 scripts/        Windows 로컬 빌드와 테스트용 API 서버
-build/          앱·설치기 아이콘과 SVG 원본
+build/          wShell과 공유하는 앱·설치기 아이콘
+licenses/       아이콘·테마·번들 글꼴 라이선스
 resources/      사용자 요구사항 원본
 rules/rules.md  작업 원칙과 진행 기록
 docs/           제품 조사와 배포 절차
@@ -107,3 +110,5 @@ docs/           제품 조사와 배포 절차
 TypeScript strict 모드, 2칸 들여쓰기, Prettier를 사용합니다. 컴포넌트는 PascalCase, 함수·변수는 camelCase, 테스트는 `*.test.ts`와 E2E의 `*.spec.ts`로 작성합니다. 테스트는 외부 API 대신 로컬 서버와 임시 DB를 사용합니다.
 
 [작업 기록](rules/rules.md) · [변경 이력](CHANGELOG.md) · [경쟁 제품 조사](docs/benchmark.md) · [버전·배포 절차](docs/releasing.md)
+
+공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 디자인 자산 라이선스**로 확인할 수 있습니다.

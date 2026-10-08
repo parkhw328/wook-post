@@ -24,10 +24,8 @@ import {
   Settings2,
   ShieldCheck,
   Square,
-  Terminal,
   Trash2,
   X,
-  Zap,
 } from 'lucide-react'
 import type {
   AppState,
@@ -40,6 +38,10 @@ import type {
 } from '../../shared/contracts'
 import { emptyWorkspace, METHODS, newPair, newRequest } from '../../shared/models'
 import { formatBytes, JsonView, Modal, PairEditor } from './components'
+import brandIcon from '../../../build/icon.png'
+import flexokiLicense from '../../../licenses/Flexoki-MIT.txt?raw'
+import fontLicense from '../../../licenses/JetBrainsMono-OFL.txt?raw'
+import iconLicense from '../../../licenses/wShell-MIT.txt?raw'
 
 type Tab = { draft: RequestDraft; baseline: string; response: HistoryEntry | null }
 type EditorSection = 'params' | 'headers' | 'body' | 'auth' | 'settings'
@@ -63,7 +65,7 @@ export function App() {
   const [working, setWorking] = useState(false)
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null)
   const [modal, setModal] = useState<
-    'save' | 'collection' | 'environments' | 'export' | 'about' | null
+    'save' | 'collection' | 'environments' | 'export' | 'about' | 'licenses' | null
   >(null)
   const [importPreview, setImportPreview] = useState<ImportPreview | null>(null)
   const [confirm, setConfirm] = useState<{
@@ -345,12 +347,7 @@ export function App() {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <span className="brand-mark">
-            <Zap size={21} fill="currentColor" />
-          </span>
-          <span>
-            Wook<span className="brand-light"> Post</span>
-          </span>
+          <span className="brand-wordmark">wPost</span>
           <span className="alpha-label">ALPHA</span>
         </div>
         <div className="topbar-right">
@@ -361,7 +358,6 @@ export function App() {
           <button className="icon-button" aria-label="앱 정보" onClick={() => setModal('about')}>
             <CircleHelp size={18} />
           </button>
-          <span className="avatar">HP</span>
         </div>
       </header>
       <div className="app-body">
@@ -866,7 +862,7 @@ export function App() {
                       spellCheck={false}
                       placeholder={
                         draft.bodyMode === 'json'
-                          ? '{\n  "message": "Hello, Wook Post!"\n}'
+                          ? '{\n  "message": "Hello, wPost!"\n}'
                           : '보낼 내용을 입력하세요.'
                       }
                       value={draft.body}
@@ -1015,15 +1011,10 @@ export function App() {
               </div>
             ) : !response ? (
               <div className="response-empty">
-                <div className="empty-art">
-                  <div className="orbit orbit-one" />
-                  <div className="orbit orbit-two" />
-                  <div className="empty-icon">
-                    <Terminal size={35} strokeWidth={1.4} />
-                  </div>
-                  <span className="art-dot" />
+                <div className="empty-art" aria-hidden="true">
+                  <Send size={31} strokeWidth={1.5} />
                 </div>
-                <span className="eyebrow">YOUR NEXT REQUEST STARTS HERE</span>
+                <span className="eyebrow">LESS FRICTION. MORE FLOW.</span>
                 <h1>API와 대화를 시작하세요.</h1>
                 <p>
                   URL을 입력하고 전송하면 응답을 바로 확인할 수 있어요.
@@ -1375,7 +1366,7 @@ export function App() {
           <p className="export-notice">
             토큰, 비밀번호, 쿠키, 응답 데이터가 포함될 수 있습니다. 신뢰하는 곳에 보관하세요.
             {exportScope === 'postman' &&
-              ' Postman 파일에는 히스토리와 Wook Post의 시간 제한·리다이렉트 설정이 포함되지 않습니다.'}
+              ' Postman 파일에는 히스토리와 wPost의 시간 제한·리다이렉트 설정이 포함되지 않습니다.'}
             {(exportScope === 'body' || exportScope === 'response') &&
               response?.truncated &&
               ' 선택한 응답은 일부만 수신했습니다.'}
@@ -1434,13 +1425,11 @@ export function App() {
         </Modal>
       )}
       {modal === 'about' && (
-        <Modal title="Wook Post" onClose={() => setModal(null)}>
+        <Modal title="wPost" onClose={() => setModal(null)}>
           <div className="about-brand">
-            <div className="brand-mark">
-              <Zap size={25} fill="currentColor" />
-            </div>
+            <img className="brand-icon" src={brandIcon} alt="wPost 앱 아이콘" />
             <div>
-              <h3>API 작업을, 내 손안에.</h3>
+              <h3 className="brand-wordmark">wPost</h3>
               <p>v{__APP_VERSION__} · Windows x64</p>
             </div>
           </div>
@@ -1465,8 +1454,36 @@ export function App() {
             보관하세요.
           </p>
           <div className="modal-actions">
+            <button className="secondary-button" onClick={() => setModal('licenses')}>
+              디자인 자산 라이선스
+            </button>
             <button className="primary-button" onClick={() => setModal(null)}>
               확인
+            </button>
+          </div>
+        </Modal>
+      )}
+      {modal === 'licenses' && (
+        <Modal title="디자인 자산 라이선스" onClose={() => setModal(null)} wide>
+          <p className="modal-description">
+            wPost는 wShell의 아이콘, Flexoki Dark 테마와 JetBrains Mono 글꼴을 사용합니다. 아이콘과
+            글꼴은 원본 그대로 포함했습니다.
+          </p>
+          <div className="license-list">
+            {[
+              ['wShell 아이콘 · MIT', iconLicense],
+              ['Flexoki 색상 · MIT', flexokiLicense],
+              ['JetBrains Mono · SIL Open Font License 1.1', fontLicense],
+            ].map(([title, license]) => (
+              <details key={title}>
+                <summary>{title}</summary>
+                <pre tabIndex={0}>{license}</pre>
+              </details>
+            ))}
+          </div>
+          <div className="modal-actions">
+            <button className="primary-button" onClick={() => setModal('about')}>
+              앱 정보로 돌아가기
             </button>
           </div>
         </Modal>

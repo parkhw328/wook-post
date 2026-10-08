@@ -96,7 +96,7 @@ export function parseImport(
     const result = backupSchema.safeParse(data)
     if (!result.success)
       throw new Error(
-        'Wook Post 백업 형식 또는 버전이 올바르지 않습니다. 기존 데이터는 변경되지 않았습니다.',
+        'wPost 백업 형식 또는 버전이 올바르지 않습니다. 기존 데이터는 변경되지 않았습니다.',
       )
     for (const entry of result.data.history) {
       const bytes = Buffer.from(entry.response.bodyBase64, 'base64')
@@ -106,11 +106,11 @@ export function parseImport(
       )
         throw new Error('백업 응답 본문의 바이트 또는 크기가 일치하지 않습니다. 파일을 확인하세요.')
     }
-    return { backup: result.data, format: 'Wook Post v1', warnings: [] }
+    return { backup: result.data, format: 'wPost v1', warnings: [] }
   }
   const parsed = postmanCollection.safeParse(data)
   if (!parsed.success)
-    throw new Error('Wook Post 백업 또는 Postman Collection v2.0 / v2.1 JSON 파일을 선택하세요.')
+    throw new Error('wPost 백업 또는 Postman Collection v2.0 / v2.1 JSON 파일을 선택하세요.')
   const source = parsed.data
   const workspace = emptyWorkspace()
   const warnings = new Set<string>()
@@ -275,7 +275,7 @@ export function exportPostman(workspace: Workspace) {
   )
   return {
     info: {
-      name: 'Wook Post',
+      name: 'wPost',
       schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
     },
     variable:

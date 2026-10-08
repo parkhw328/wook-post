@@ -1,13 +1,45 @@
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./assets/fonts/JetBrainsMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./assets/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
-  --bg: #11151b;
-  --surface: #1a2029;
-  --text: #c6d0dc;
-  --bright: #f0f5f7;
-  --muted: #8997a8;
-  --faint: #627084;
-  --accent: #7dd9b0;
-  --border: #2a313c;
-  --hover: #28303a;
-  --mono: 'Cascadia Code', 'Consolas', 'SFMono-Regular', monospace;
+  --bg: #100f0f;
+  --surface: #1c1b1a;
+  --raised: #282726;
+  --text: #cecdc3;
+  --bright: #fffcf0;
+  --muted: #878580;
+  --faint: #6f6e69;
+  --accent: #da702c;
+  --accent-hover: #ec8b49;
+  --accent-soft: #da702c1a;
+  --accent-border: #da702c66;
+  --on-accent: #100f0f;
+  --border: #343331;
+  --border-strong: #575653;
+  --hover: #282726;
+  --success: #879a39;
+  --success-soft: #879a391a;
+  --error: #d14d41;
+  --error-text: #e8705f;
+  --error-soft: #d14d411a;
+  --warning: #d0a215;
+  --warning-soft: #d0a2151a;
+  --blue: #6f9fca;
+  --purple: #a699d0;
+  --cyan: #5abdac;
+  --mono: 'JetBrains Mono', 'Malgun Gothic', 'Apple SD Gothic Neo', monospace;
 }
