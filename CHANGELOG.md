@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 · 2026-10-09
+
+- 프로젝트 MIT 라이선스와 저작권 고지를 추가하고 README·앱 정보·설치 파일에 반영.
+- React·React DOM·Scheduler·Lucide/Feather·Zod·Electron의 라이선스 원문을 보존하고 빌드 시 동기화.
+- 제3자 글꼴·테마와 Electron/Chromium 구성요소는 각각의 원래 라이선스를 유지함을 명시.
+
 ## 0.2.2 · 2026-10-09
 
 - 주황색 P를 브라우저 창 안에 배치한 아이콘으로 변경하고 앱·설치기·README 로고에 적용.

@@ -8,6 +8,8 @@ files:
   - package.json
 asar: true
 extraResources:
+  - from: LICENSE
+    to: LICENSE
   - from: build/icon.png
     to: icon.png
   - from: licenses

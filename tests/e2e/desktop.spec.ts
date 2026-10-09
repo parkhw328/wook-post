@@ -299,7 +299,14 @@ test('bundled Latin and Korean fonts, readable type and compact layouts work in 
   await page.getByRole('button', { name: '취소', exact: true }).click()
   await page.getByRole('button', { name: '앱 정보', exact: true }).click()
   await expect(page.getByRole('dialog')).not.toContainText('알파')
-  await page.getByRole('button', { name: '디자인 자산 라이선스', exact: true }).click()
+  await page.getByRole('button', { name: '라이선스 및 오픈소스 고지', exact: true }).click()
+  const ownLicense = page.locator('.license-list details').filter({ hasText: 'wPost · MIT' })
+  await ownLicense.locator('summary').click()
+  await expect(ownLicense.locator('pre')).toContainText('Copyright (c) 2026 Hyunwook Park')
+  const software = page.locator('.license-list details').filter({ hasText: 'React · React DOM' })
+  await software.locator('summary').click()
+  await expect(software.locator('pre')).toContainText('Copyright (c) 2013-present Cole Bemis')
+  await expect(software.locator('pre')).toContainText('scheduler ')
   await page.getByText('Noto Sans KR · SIL Open Font License 1.1', { exact: true }).click()
   await expect(page.locator('.license-list details').last().locator('pre')).toContainText(
     'SIL OPEN FONT LICENSE',

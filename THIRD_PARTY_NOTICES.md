@@ -1,6 +1,24 @@
-# Design Asset Notices
+# Third-Party Notices
 
-wPost uses the following design assets from the sibling wShell project and Google Fonts. Copies of their license texts are included in `licenses/`, shipped with the application, and available in **앱 정보 → 디자인 자산 라이선스**.
+wPost's own code and project-owned assets are offered under the root [MIT License](LICENSE), to the extent rights are held. Third-party components remain under their original licenses; the root license does not relicense fonts, libraries, or Electron/Chromium components.
+
+## Bundled software
+
+Full, unmodified upstream license texts are preserved in [`licenses/Software-LICENSES.txt`](licenses/Software-LICENSES.txt), generated from the installed versions by `npm run licenses:sync` during every build.
+
+| Component         | Version | License                                                         |
+| ----------------- | ------- | --------------------------------------------------------------- |
+| React / React DOM | 19.3.0  | MIT                                                             |
+| Scheduler         | 0.28.0  | MIT                                                             |
+| Lucide React      | 1.52.0  | ISC; Feather-derived icons retain their MIT notice              |
+| Zod               | 4.6.5   | MIT                                                             |
+| Electron          | 44.7.0  | MIT for Electron itself; component-specific licenses also apply |
+
+React, React DOM, Scheduler, Lucide and Zod are bundled into the renderer; Zod is also shipped as a main-process dependency. Electron's original `LICENSE.electron.txt` and `LICENSES.chromium.html` remain beside the executable. The latter contains the complete upstream component notices, including FFmpeg; these components are not all MIT-licensed. Electron source and its pinned dependency definitions are available at [electron/electron v44.7.0](https://github.com/electron/electron/tree/v44.7.0). Do not remove these files when redistributing the installer or unpacked app.
+
+## Fonts and design references
+
+wPost uses the following design assets from the sibling wShell project and Google Fonts. Copies of their license texts are included in `licenses/`, shipped with the application, and available in **앱 정보 → 라이선스 및 오픈소스 고지**.
 
 | Asset                                            | Origin                                                                                                                                                                                                                          | License                                                                         | Local copy                       |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------- |

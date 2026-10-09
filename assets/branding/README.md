@@ -11,6 +11,10 @@ the SVG wordmark uses the exact accent value.
 
 ## Assets
 
+Project-owned branding is offered under the root MIT license to the extent
+rights are held. The wShell reference notice remains in `licenses/wShell-MIT.txt`.
+Generated output does not imply exclusive rights or trademark clearance.
+
 | File | Purpose |
 | --- | --- |
 | `wpost-icon.png` | Generated master icon with transparent exterior corners |

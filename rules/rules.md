@@ -191,3 +191,13 @@
 - 삭제 전 원격 작업 브랜치 6개와 로컬 작업 브랜치 3개의 모든 커밋이 main에 포함되어 있음을 확인했다. 별도 worktree나 미커밋 변경은 없었다.
 - 버전 태그, GitHub 최신 릴리스, 로컬 release/<version>/ 산출물은 유지한다.
 - 현재 운영 절차를 갱신했으며 이전 작업 기록에 나오는 브랜치 이름은 과거 이력으로 보존한다.
+
+## 2026-10-09 · 0.2.3 MIT 라이선스와 제3자 고지
+
+- 사용자 선택에 따라 프로젝트 코드를 MIT로 고지하고 저작권자를 Hyunwook Park으로 명시했다. README·package.json·앱 정보·설치 리소스에 반영했다.
+- React·React DOM·Scheduler·Lucide/Feather·Zod·Electron의 설치된 버전과 라이선스 원문을 Software-LICENSES.txt에 보존한다. 빌드 시 licenses:sync로 동기화한다.
+- 기존 글꼴 OFL, Flexoki/wShell MIT, Electron/Chromium 구성요소별 라이선스는 그대로 유지한다. 프로젝트 MIT가 제3자 구성요소를 재라이선스하지 않음을 명시했다.
+- 공개·재배포 조건과 생성 아이콘의 검토 한계는 docs/licensing.md에 공식 출처와 함께 기록했다. 상표 또는 모든 소스의 권리 비침해에 대한 보증은 하지 않는다.
+- 검증: 타입·포맷·단위/통합 테스트 35개, Electron UI 8개, NSIS 빌드 성공. 패키지의 프로젝트·제3자·글꼴·Electron·Chromium 고지 파일의 해시가 원본과 일치한다.
+- 설치 파일: release/0.2.3/wPost-0.2.3-x64-Setup.exe. SHA-256: bbfd9fa2077861e006bf43e5109b3a570ab8526887660a38a80cbf2f75f245e4.
+- 저장소의 비공개 설정은 유지한다. 최신 릴리스 게시 대상은 v0.2.3이며 이전 로컬 버전과 Git 태그는 보존한다.

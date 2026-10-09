@@ -4,13 +4,19 @@
 
 Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
 
-**현재 버전: 0.2.2** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**현재 버전: 0.2.3** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
 
 **[Windows x64 최신 설치 파일 다운로드](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe)**
 
 [릴리스 정보](https://github.com/parkhw328/wook-post/releases/latest) · [SHA-256 체크섬](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe.sha256)
 
 GitHub Releases에는 최신 정식 버전 1개를 제공합니다. 위 링크는 새 버전이 나와도 그대로 사용할 수 있습니다.
+
+## 라이선스
+
+wPost의 자체 코드와 권리를 보유한 자산은 [MIT 라이선스](LICENSE)로 제공합니다. 저작권·라이선스 고지를 유지하면 사용·수정·재배포·상업적 이용이 가능합니다.
+
+포함된 라이브러리·글꼴·테마는 [제3자 고지](THIRD_PARTY_NOTICES.md)의 원래 라이선스를 따릅니다. 설치된 앱의 **앱 정보 → 라이선스 및 오픈소스 고지**에서도 확인할 수 있습니다. 공개·재배포 조건과 확인 범위는 [라이선스 검토 기록](docs/licensing.md)에 정리했습니다.
 
 wShell과 같은 주황색·차콜 테마의 **브라우저 창 안의 대문자 `P` 아이콘**과 Flexoki Dark 테마를 사용합니다. 기본 영문 **JetBrains Mono**, 한글 **Noto Sans KR**를 앱에 포함합니다. 기본 UI 16px, URL·코드 17px, 보조 정보 14px이며 앱 설정에서 글꼴과 크기를 바꿀 수 있습니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
 
@@ -88,7 +94,7 @@ npm ci
 npm run dist:win
 ```
 
-타입·포맷·테스트·번들 빌드 후 `release/0.2.2/wPost-0.2.2-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
+타입·포맷·테스트·번들 빌드 후 `release/0.2.3/wPost-0.2.3-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 
@@ -130,7 +136,7 @@ TypeScript strict 모드, 2칸 들여쓰기, Prettier를 사용합니다. 컴포
 
 [작업 기록](rules/rules.md) · [변경 이력](CHANGELOG.md) · [경쟁 제품 조사](docs/benchmark.md) · [버전·배포 절차](docs/releasing.md)
 
-공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 디자인 자산 라이선스**로 확인할 수 있습니다.
+공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 라이선스 및 오픈소스 고지**로 확인할 수 있습니다.
 
 `0.2.0`의 [기능·호환성 점검 결과](docs/reviews/v0.2.0.md)와 `0.1.0`의 [전체 점검 기록](docs/reviews/v0.1.0.md)을 확인할 수 있습니다.
 

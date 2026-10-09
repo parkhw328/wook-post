@@ -47,6 +47,8 @@ import flexokiLicense from '../../../licenses/Flexoki-MIT.txt?raw'
 import fontLicense from '../../../licenses/JetBrainsMono-OFL.txt?raw'
 import koreanFontLicense from '../../../licenses/NotoSansKR-OFL.txt?raw'
 import wShellLicense from '../../../licenses/wShell-MIT.txt?raw'
+import projectLicense from '../../../LICENSE?raw'
+import softwareLicenses from '../../../licenses/Software-LICENSES.txt?raw'
 
 type Tab = { draft: RequestDraft; baseline: string; response: HistoryEntry | null }
 type EditorSection = 'params' | 'headers' | 'body' | 'auth' | 'settings'
@@ -1647,7 +1649,7 @@ export function App() {
           </p>
           <div className="modal-actions">
             <button className="secondary-button" onClick={() => setModal('licenses')}>
-              디자인 자산 라이선스
+              라이선스 및 오픈소스 고지
             </button>
             <button className="primary-button" onClick={() => setModal(null)}>
               확인
@@ -1656,13 +1658,16 @@ export function App() {
         </Modal>
       )}
       {modal === 'licenses' && (
-        <Modal title="디자인 자산 라이선스" onClose={() => setModal(null)} wide>
+        <Modal title="라이선스 및 오픈소스 고지" onClose={() => setModal(null)} wide>
           <p className="modal-description">
-            wPost는 전용 P 아이콘과 Flexoki Dark 테마를 사용합니다. 기본 영문 글꼴 JetBrains Mono와
-            한글 글꼴 Noto Sans KR은 원본 그대로 포함했습니다.
+            wPost는 MIT 라이선스로 제공합니다. 포함된 라이브러리·글꼴·테마는 각 원래 라이선스를
+            따릅니다. Electron의 전체 구성요소 고지는 설치 폴더의 LICENSES.chromium.html에서 확인할
+            수 있습니다.
           </p>
           <div className="license-list">
             {[
+              ['wPost · MIT', projectLicense],
+              ['React · React DOM · Scheduler · Lucide · Zod · Electron', softwareLicenses],
               ['wShell 디자인 참조 · MIT', wShellLicense],
               ['Flexoki 색상 · MIT', flexokiLicense],
               ['JetBrains Mono · SIL Open Font License 1.1', fontLicense],

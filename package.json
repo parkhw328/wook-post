@@ -1,6 +1,6 @@
 {
   "name": "wook-post",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "wPost — a local desktop HTTP client for Windows",
   "main": "out/main/index.js",
   "author": {
@@ -8,12 +8,14 @@
     "email": "parkhw328@gmail.com"
   },
   "private": true,
+  "license": "MIT",
   "engines": {
     "node": ">=24.0.0"
   },
   "scripts": {
     "dev": "electron-vite dev",
-    "build": "npm run typecheck && electron-vite build",
+    "build": "npm run licenses:sync && npm run typecheck && electron-vite build",
+    "licenses:sync": "node scripts/sync-licenses.mjs",
     "start": "electron-vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
