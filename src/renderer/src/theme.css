@@ -49,11 +49,11 @@
   --blue: #6f9fca;
   --purple: #a699d0;
   --cyan: #5abdac;
-  --ui-scale: 1;
-  --font-caption: calc(14px * var(--ui-scale));
-  --font-body: calc(16px * var(--ui-scale));
-  --font-code: calc(17px * var(--ui-scale));
-  --font-section: calc(20px * var(--ui-scale));
-  --font-title: calc(28px * var(--ui-scale));
+  --content-scale: 1;
+  --font-caption: 14px;
+  --font-body: 16px;
+  --font-code: calc(17px * var(--content-scale));
+  --font-section: 20px;
+  --font-title: 28px;
   --mono: 'JetBrains Mono', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }

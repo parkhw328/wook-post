@@ -64,29 +64,54 @@ export function AppearanceSettings({
             기본 글꼴 2종은 앱에 포함되어 있습니다. 다른 글꼴이 이 PC에 없으면 기본 글꼴로
             표시됩니다.
           </p>
-          <label className="field-label">
+          <div className="field-label">
             <span className="appearance-scale-label">
-              전체 글자 크기 <output>{value.scale}%</output>
+              <label htmlFor="content-font-scale">요청·응답 글자 크기</label>
+              <output htmlFor="content-font-scale">{value.scale}%</output>
             </span>
-            <input
-              aria-label="전체 글자 크기"
-              type="range"
-              min={80}
-              max={150}
-              step={5}
-              value={value.scale}
-              onChange={(event) => onChange({ ...value, scale: Number(event.target.value) })}
-            />
-          </label>
+            <div className="appearance-scale-controls">
+              <button
+                type="button"
+                className="secondary-button"
+                aria-label="글자 크기 줄이기"
+                disabled={value.scale <= 80}
+                onClick={() => onChange({ ...value, scale: Math.max(80, value.scale - 5) })}
+              >
+                −
+              </button>
+              <input
+                id="content-font-scale"
+                type="range"
+                min={80}
+                max={150}
+                step={5}
+                value={value.scale}
+                onChange={(event) => onChange({ ...value, scale: Number(event.target.value) })}
+              />
+              <button
+                type="button"
+                className="secondary-button"
+                aria-label="글자 크기 키우기"
+                disabled={value.scale >= 150}
+                onClick={() => onChange({ ...value, scale: Math.min(150, value.scale + 5) })}
+              >
+                +
+              </button>
+            </div>
+          </div>
           <div className="appearance-scale-label field-hint">
             <span>80%</span>
-            <span>기본 100% · 본문 {Number(((16 * value.scale) / 100).toFixed(1))}px</span>
+            <span>본문 {Number(((17 * value.scale) / 100).toFixed(2))}px · 기본 17px</span>
             <span>150%</span>
           </div>
+          <p className="field-hint">
+            요청 입력과 응답 본문·헤더에 적용됩니다. 메뉴와 버튼 크기는 유지됩니다.
+          </p>
           <div className="appearance-preview" aria-label="글꼴 미리보기">
-            <strong>wPost · API Workspace</strong>
-            <p>요청을 보내고 응답을 확인하세요.</p>
-            <code>GET /api/users → 200 OK</code>
+            <strong>응답 미리보기</strong>
+            <pre>
+              <code>{'{\n  "status": 200,\n  "message": "요청이 완료되었습니다."\n}'}</code>
+            </pre>
           </div>
         </fieldset>
       </div>

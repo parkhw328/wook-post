@@ -23,7 +23,6 @@ import {
   Search,
   Send,
   Settings2,
-  ShieldCheck,
   Square,
   Trash2,
   X,
@@ -122,7 +121,7 @@ export function App() {
   const displayedAppearance = modal === 'appearance' ? appearanceDraft : appearance
   useLayoutEffect(() => {
     const style = document.documentElement.style
-    style.setProperty('--ui-scale', String(displayedAppearance.scale / 100))
+    style.setProperty('--content-scale', String(displayedAppearance.scale / 100))
     style.setProperty('--mono', appearanceFontFamily(displayedAppearance))
   }, [displayedAppearance])
   const notify = useCallback((text: string, error = false) => setMessage({ text, error }), [])
@@ -478,10 +477,6 @@ export function App() {
           <span className="brand-wordmark">wPost</span>
         </div>
         <div className="topbar-right">
-          <span className="local-label">
-            <span className="status-dot" />이 기기에 저장
-          </span>
-          <span className="topbar-divider" />
           <button className="icon-button" aria-label="앱 정보" onClick={() => setModal('about')}>
             <CircleHelp size={18} />
           </button>
@@ -542,7 +537,6 @@ export function App() {
               <strong>내 워크스페이스</strong>
               <small>나만의 API 작업 공간</small>
             </div>
-            <span className="local-badge">LOCAL</span>
           </div>
           <div className="transfer-actions">
             <button disabled={!ready || working} onClick={() => void importFile()}>
@@ -761,13 +755,6 @@ export function App() {
                 )}
               </>
             )}
-          </div>
-          <div className="sidebar-footer">
-            <ShieldCheck size={15} />
-            <div>
-              <strong>로그인 없이, 로컬에서</strong>
-              <span>요청은 지정한 서버로만 전송됩니다.</span>
-            </div>
           </div>
         </aside>
         <main className="main-panel">
@@ -1171,11 +1158,7 @@ export function App() {
                 </div>
                 <span className="eyebrow">LESS FRICTION. MORE FLOW.</span>
                 <h1>API와 대화를 시작하세요.</h1>
-                <p>
-                  URL을 입력하고 전송하면 응답을 바로 확인할 수 있어요.
-                  <br />
-                  모든 요청 기록은 이 기기에 남습니다.
-                </p>
+                <p>URL을 입력하고 전송하면 응답을 바로 확인할 수 있어요.</p>
                 <button
                   className="demo-button"
                   onClick={() => {
@@ -1302,10 +1285,6 @@ export function App() {
         </span>
         <span>{activeEnvironment?.name ?? '환경 선택 안 함'}</span>
         <span className="statusbar-spacer" />
-        <span>
-          <Database size={11} />
-          로컬 저장소
-        </span>
         <span>v{__APP_VERSION__}</span>
       </footer>
       {message && (
