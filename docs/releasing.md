@@ -28,7 +28,9 @@
 
 ## 설치 파일과 서명
 
-생성 경로: `release/wPost-<version>-x64-Setup.exe`.
+생성 경로: `release/<version>/wPost-<version>-x64-Setup.exe`.
+
+`package.json`의 버전으로 폴더를 나누며 다른 버전 산출물은 유지한다. 같은 버전의 재빌드는 해당 폴더를 갱신한다. `npm run dist:win`은 설치 파일 옆에 `.exe.sha256` 체크섬도 생성한다. 설치 파일과 빌드 중간 산출물은 Git에 포함하지 않으며, 폴더 사용법은 [`release/README.md`](../release/README.md)에 기록한다.
 
 `0.2.0`의 Windows x64 설치 파일은 로컬 Docker에서 생성했다. [파일 크기·체크섬·재현 명령](builds/v0.2.0-windows.md)을 기록해 두었다. 이 패키징 확인은 실제 Windows 설치 검증을 대신하지 않는다.
 

@@ -2,7 +2,7 @@ appId: com.parkhw328.wookpost
 productName: wPost
 copyright: Copyright © 2026 Hyunwook Park
 directories:
-  output: release
+  output: release/${version}
 files:
   - out/**/*
   - package.json

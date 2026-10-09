@@ -1,6 +1,7 @@
 node_modules/
 out/
-release/
+/release/*
+!/release/README.md
 coverage/
 test-results/
 playwright-report/

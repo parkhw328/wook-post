@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Windows 빌드를 `release/<version>/`에 보관하고 설치 파일의 SHA-256 체크섬을 자동 생성.
 - 최신 v0.2.0 개발 브랜치와 main을 통합하고 주황색 P 아이콘을 앱·설치기에 연결.
 - 로컬 `resources/`를 Git 추적에서 제외.
 
