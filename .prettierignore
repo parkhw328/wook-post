@@ -1,0 +1,8 @@
+node_modules
+out
+release
+package-lock.json
+resources
+AGENTS.md
+test-results
+playwright-report

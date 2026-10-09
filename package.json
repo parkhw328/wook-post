@@ -1,0 +1,49 @@
+{
+  "name": "wook-post",
+  "version": "0.2.0",
+  "description": "wPost — a local desktop HTTP client for Windows",
+  "main": "out/main/index.js",
+  "author": {
+    "name": "Hyunwook Park",
+    "email": "parkhw328@gmail.com"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "npm run typecheck && electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && playwright test",
+    "format": "prettier --write src tests scripts *.json *.ts *.yml README.md CHANGELOG.md THIRD_PARTY_NOTICES.md docs rules",
+    "format:check": "prettier --check src tests scripts *.json *.ts *.yml README.md CHANGELOG.md THIRD_PARTY_NOTICES.md docs rules",
+    "check": "npm run typecheck && npm run format:check && npm test",
+    "dist:win": "node scripts/build-windows.mjs",
+    "icons:build": "node scripts/build-icons.mjs",
+    "demo:server": "node scripts/demo-server.mjs"
+  },
+  "dependencies": {
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "lucide-react": "1.52.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "@playwright/test": "1.64.0",
+    "@types/node": "^24.19.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "electron": "44.7.0",
+    "electron-builder": "26.15.3",
+    "electron-vite": "5.0.0",
+    "prettier": "^3.6.2",
+    "typescript": "~6.0.0",
+    "vite": "7.3.7",
+    "vitest": "4.1.11"
+  }
+}
