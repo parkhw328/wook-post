@@ -13,3 +13,4 @@ playwright-report/
 *.sqlite-shm
 *.sqlite-wal
 .DS_Store
+/resources/
