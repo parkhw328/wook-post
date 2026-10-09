@@ -6,6 +6,12 @@ Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작�
 
 **현재 버전: 0.2.2** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
 
+**[Windows x64 최신 설치 파일 다운로드](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe)**
+
+[릴리스 정보](https://github.com/parkhw328/wook-post/releases/latest) · [SHA-256 체크섬](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe.sha256)
+
+GitHub Releases에는 최신 정식 버전 1개를 제공합니다. 위 링크는 새 버전이 나와도 그대로 사용할 수 있습니다.
+
 wShell과 같은 주황색·차콜 테마의 **브라우저 창 안의 대문자 `P` 아이콘**과 Flexoki Dark 테마를 사용합니다. 기본 영문 **JetBrains Mono**, 한글 **Noto Sans KR**를 앱에 포함합니다. 기본 UI 16px, URL·코드 17px, 보조 정보 14px이며 앱 설정에서 글꼴과 크기를 바꿀 수 있습니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
 
 ![로컬 API 요청과 JSON 응답 화면](docs/screenshots/desktop-response.png)

@@ -19,6 +19,7 @@
 - 변경은 기능 브랜치에서 검증 후 커밋한다. 메시지 예: `feat: add local API client v0.1.0-alpha.1`.
 - 푸시한 브랜치, 커밋, 버전 태그와 검증 결과를 기록한다. 원격 main을 강제로 덮어쓰지 않는다.
 - 버전 변경 절차와 Windows 확인 항목은 [`docs/releasing.md`](../docs/releasing.md)에 둔다.
+- 버전 작업 완료 시 설치 파일을 GitHub Releases에도 게시한다. 최신 정식 릴리스 1개만 제공하고 README는 고정 Latest 다운로드 링크를 사용한다. `npm run release:publish`의 업로드·검증·공개 순서를 따르며 이전 로컬 산출물과 Git 태그는 보존한다.
 
 ## 2026-10-08 · 0.1.0-alpha.1 구현
 
@@ -174,3 +175,12 @@
 - 검증: 32px 시각 확인, ICO 16·24·32·48·64·128·256px 프레임과 투명 모서리 검사, SVG 내장 이미지 일치, 타입·포맷·테스트 35개, 프로덕션 및 Windows NSIS 빌드 성공.
 - 패키지 아이콘과 원본의 해시 일치 및 설치 파일 체크섬을 확인했다. 설치 파일: release/0.2.2/wPost-0.2.2-x64-Setup.exe. SHA-256: d67e54cd97b98eb58e3028cc8d313b7f9357383b810ed003112ea09a5a173a9b.
 - 기존 0.2.0·0.2.1 릴리스 폴더를 유지한다. 실제 설치 마법사 실행은 하지 않았다.
+
+## 2026-10-09 · GitHub 최신 릴리스 다운로드
+
+- v0.2.2를 GitHub Releases에 게시했다. 업로드 파일명은 wPost-x64-Setup.exe 및 .exe.sha256으로 고정한다.
+- README의 다운로드 링크는 releases/latest/download/wPost-x64-Setup.exe를 사용한다.
+- npm run release:publish는 로컬 체크섬 검증, 초안 업로드, 재다운로드 해시 검증, Latest 공개, 이전 정식 릴리스 정리 순서로 동작한다. 이전 로컬 릴리스와 Git 태그는 유지한다.
+- npm run release:win으로 Windows 빌드와 게시를 함께 실행할 수 있다. 태그는 먼저 원격에 푸시해야 한다.
+- 검증: 게시 계획 확인, 스크립트 구문·포맷 검사, 실제 업로드 및 다운로드 체크섬 일치, GitHub Latest와 첨부 파일 확인. 현재 공개된 정식 릴리스는 v0.2.2 한 개다.
+- 저장소의 비공개 설정은 유지한다. 다운로드는 저장소 접근 권한이 있는 GitHub 계정으로 이용한다.

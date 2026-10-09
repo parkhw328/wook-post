@@ -23,6 +23,8 @@
     "format:check": "prettier --check src tests scripts *.json *.ts *.yml README.md CHANGELOG.md THIRD_PARTY_NOTICES.md docs rules",
     "check": "npm run typecheck && npm run format:check && npm test",
     "dist:win": "node scripts/build-windows.mjs",
+    "release:publish": "node scripts/publish-release.mjs",
+    "release:win": "npm run dist:win && npm run release:publish",
     "icons:build": "node scripts/build-icons.mjs",
     "demo:server": "node scripts/demo-server.mjs"
   },
