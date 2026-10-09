@@ -4,7 +4,7 @@
 
 Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
 
-**현재 버전: 0.2.3** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**현재 버전: 1.0.0** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
 
 **[Windows x64 최신 설치 파일 다운로드](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe)**
 
@@ -94,7 +94,7 @@ npm ci
 npm run dist:win
 ```
 
-타입·포맷·테스트·번들 빌드 후 `release/0.2.3/wPost-0.2.3-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
+타입·포맷·테스트·번들 빌드 후 `release/1.0.0/wPost-1.0.0-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 

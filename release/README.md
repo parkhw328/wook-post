@@ -8,9 +8,9 @@ release/
   0.2.0/
     wPost-0.2.0-x64-Setup.exe
     wPost-0.2.0-x64-Setup.exe.sha256
-  0.3.0/
-    wPost-0.3.0-x64-Setup.exe
-    wPost-0.3.0-x64-Setup.exe.sha256
+  1.0.0/
+    wPost-1.0.0-x64-Setup.exe
+    wPost-1.0.0-x64-Setup.exe.sha256
 ```
 
 위 구조는 예시입니다. 빌드한 버전의 폴더만 실제로 생성됩니다.

@@ -3,10 +3,10 @@
 ## 버전 올리기
 
 1. `main`을 최신 상태로 갱신한 뒤 구현하고 `rules/rules.md`와 `CHANGELOG.md`를 갱신한다. 버전별 작업 브랜치는 만들지 않는다.
-2. 필요할 때 `npm version 0.2.0 --no-git-tag-version`처럼 버전을 지정한다. 앱, 설치 파일 이름, 백업 메타데이터는 `package.json`을 따른다.
+2. 필요할 때 `npm version 1.0.0 --no-git-tag-version`처럼 버전을 지정한다. 앱, 설치 파일 이름, 백업 메타데이터는 `package.json`을 따른다.
 3. `npm run check`, `npm run test:e2e`로 검증한다. Linux의 디스플레이 없는 환경에서는 `xvfb-run -a npm run test:e2e`를 쓴다.
 4. Windows x64 로컬 PC에서 `npm ci` 후 `npm run dist:win`을 실행한다.
-5. 검증한 변경을 `main`에 커밋하고 `v0.2.2`처럼 버전 태그를 붙인다. `main`과 태그를 원격에 푸시하고 실제 결과를 작업 기록에 남긴다. 이전 릴리스 태그는 유지한다.
+5. 검증한 변경을 `main`에 커밋하고 `v1.0.0`처럼 버전 태그를 붙인다. `main`과 태그를 원격에 푸시하고 실제 결과를 작업 기록에 남긴다. 이전 릴리스 태그는 유지한다.
 6. `npm run release:publish`로 설치 파일을 GitHub Releases에 게시한다. 아직 빌드하지 않았다면 `npm run release:win`으로 빌드와 게시를 함께 실행한다.
 
 릴리스 명령은 현재 버전에 맞게 바꾼다. 기존 태그를 이동하거나 덮어쓰지 않는다. `dist:win`은 원격 게시를 수행하지 않는다.
