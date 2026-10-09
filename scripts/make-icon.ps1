@@ -34,4 +34,16 @@ try {
         foreach ($frame in $frames) { $writer.Write([byte[]]$frame.Bytes) }
     } finally { $writer.Dispose(); $output.Dispose() }
 } finally { $source.Dispose() }
-Write-Output 'Generated assets/wpost.ico (16, 24, 32, 48, 64, 128, 256 px).'
+
+# Keep every application and documentation consumer on the same master image.
+$iconPath = Join-Path $repoRoot 'assets/branding/wpost-icon.png'
+Copy-Item -LiteralPath $iconPath -Destination (Join-Path $repoRoot 'build/icon.png')
+Copy-Item -LiteralPath (Join-Path $repoRoot 'assets/wpost.ico') -Destination (Join-Path $repoRoot 'build/icon.ico')
+$encodedIcon = [Convert]::ToBase64String([IO.File]::ReadAllBytes($iconPath))
+$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024" viewBox="0 0 1024 1024"><image width="1024" height="1024" xlink:href="data:image/png;base64,' + $encodedIcon + '"/></svg>'
+$utf8 = New-Object Text.UTF8Encoding($false)
+[IO.File]::WriteAllText((Join-Path $repoRoot 'build/icon.svg'), $svg + "`n", $utf8)
+$logoPath = Join-Path $repoRoot 'assets/branding/wpost-logo.svg'
+$logo = [regex]::Replace([IO.File]::ReadAllText($logoPath), 'data:image/png;base64,[^"]+', 'data:image/png;base64,' + $encodedIcon)
+[IO.File]::WriteAllText($logoPath, $logo, $utf8)
+Write-Output 'Generated seven ICO sizes and synchronized the application icons and wordmark.'

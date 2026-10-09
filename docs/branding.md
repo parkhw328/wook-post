@@ -2,13 +2,13 @@
 
 ## 기준
 
-표기명은 **wPost**이다. `w`는 소문자, `P`는 대문자로 쓴다. wShell과 Flexoki Dark 테마·기본 글꼴을 공유하되, 주황색 P 아이콘으로 제품군의 일관성과 작업표시줄 식별을 함께 유지한다. 현재 버전은 프리릴리즈 접미사가 없는 `0.2.1`이다. 앱 화면과 설치기에 ALPHA 배지를 표시하지 않는다.
+표기명은 **wPost**이다. `w`는 소문자, `P`는 대문자로 쓴다. wShell과 Flexoki Dark 테마·기본 글꼴을 공유하되, 주황색 브라우저 창 안에 P를 배치해 제품군의 일관성과 웹/API 도구의 식별을 함께 유지한다. 현재 버전은 프리릴리즈 접미사가 없는 `0.2.2`이다. 앱 화면과 설치기에 ALPHA 배지를 표시하지 않는다.
 
 참조 저장소: `/data/project/wook-shell`, 커밋 `970b131099ca3905607cc19ec60106af529adb4c`. 기준 문서는 `assets/branding/README.md`, `rules/product.md`, `rules/workspace-ui.md`이며 색상은 `src/ui.hpp`와 `mac/Sources/WShell/Theme.swift`를 확인했다. 참조 저장소는 변경하지 않는다.
 
 ## 시각 자산
 
-- `assets/branding/wpost-icon.png`: 주황색 `#DA702C` P와 차콜 `#100F0F` 타일의 이미지 원본. 생성 기록은 [브랜딩 자산 문서](../assets/branding/README.md)에 보관한다.
+- `assets/branding/wpost-icon.png`: 주황색 `#DA702C` P와 차콜 `#100F0F` 브라우저 창의 이미지 원본. 생성 기록은 [브랜딩 자산 문서](../assets/branding/README.md)에 보관한다.
 - `build/icon.svg`: 같은 PNG 원본을 내장한 SVG 래퍼. 기존 아이콘 빌드 경로와 호환된다.
 - `assets/branding/wpost-logo.svg`: README용 가로형 로고.
 - `build/icon.png`: 주황색 P 앱 아이콘 (재생성 시 512px). 앱 정보·창 아이콘에 사용한다.

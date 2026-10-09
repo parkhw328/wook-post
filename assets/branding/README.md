@@ -1,11 +1,12 @@
 # wPost branding
 
-wPost follows the wShell family identity: a warm orange letter on a rounded
-charcoal tile. Its distinguishing mark is an uppercase **P** with a rounded stem
-and a large counter for legibility at small sizes.
+wPost follows the wShell family identity with a warm orange **P** inside a
+rounded charcoal browser window. The orange window outline, three toolbar dots
+and address bar identify the web/API workspace, while the large P keeps the
+product recognizable at small sizes. This browser-window identity ships in v0.2.2.
 
 The target palette matches `wook-shell`: accent `#DA702C`, background `#100F0F`,
-and border `#282726`. The generated PNG retains subtle raster color variation;
+and browser frame `#DA702C`. The generated PNG retains subtle raster color variation;
 the SVG wordmark uses the exact accent value.
 
 ## Assets
@@ -21,13 +22,29 @@ Consolas and monospace. No external image or font download is required.
 Keep the icon proportions and clear space intact. Use the P tile alone for
 small application icons and the horizontal logo where the product name helps.
 
-Regenerate the ICO from the repository root on Windows:
+Regenerate the ICO and synchronize the application PNG/ICO/SVG and logo from
+the master PNG on Windows:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/make-icon.ps1
 ```
 
 ## Creation record
+
+### v0.2.2 browser-window icon
+
+Edited with OpenAI's built-in `image_gen` tool on 2026-10-09, using the previous
+`wpost-icon.png` as the edit target. The browser frame, toolbar dots and address
+bar were added while preserving the orange P identity. Earlier icons remain
+in Git history and the previous local release folders.
+
+Final prompt:
+
+```text
+Use case: precise-object-edit. Asset type: production wPost application icon. Image 1 is the edit target. Retain the warm orange uppercase P identity but transform its charcoal rounded tile into a clear minimal web browser window silhouette. Square 1024x1024 transparent canvas. Center one nearly square rounded browser window occupying about 88% of canvas width and 84% height, with a thick warm orange #DA702C outline. Interior flat charcoal #100F0F. Across the top add a simple browser toolbar separated from the content by a thick orange horizontal rule: three small orange circles on the left and one short rounded orange-outlined empty address bar on the right. Below the toolbar center a single large bold rounded uppercase P in solid #DA702C; use the existing P silhouette and large counter, scaled to fit with generous breathing space. The browser frame itself is the icon, not a second nested panel. Make the browser frame and P immediately legible at 16, 24 and 32 px. Flat clean geometric graphic, crisp edges, no texture, gradient, shadow, glow or depth. No text except P, no extra glyphs, no mockup, no watermark. True transparent exterior, opaque charcoal inside.
+```
+
+### Original P icon
 
 Created on 2026-10-09 using OpenAI's built-in `image_gen` tool, with
 `C:/Project/wook-shell/assets/branding/wshell-icon.png` as the reference/edit

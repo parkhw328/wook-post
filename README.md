@@ -4,9 +4,9 @@
 
 Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
 
-**현재 버전: 0.2.1** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**현재 버전: 0.2.2** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
 
-wShell과 같은 주황색·차콜 테마의 **대문자 `P` 아이콘**과 Flexoki Dark 테마를 사용합니다. 기본 영문 **JetBrains Mono**, 한글 **Noto Sans KR**를 앱에 포함합니다. 기본 UI 16px, URL·코드 17px, 보조 정보 14px이며 앱 설정에서 글꼴과 크기를 바꿀 수 있습니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
+wShell과 같은 주황색·차콜 테마의 **브라우저 창 안의 대문자 `P` 아이콘**과 Flexoki Dark 테마를 사용합니다. 기본 영문 **JetBrains Mono**, 한글 **Noto Sans KR**를 앱에 포함합니다. 기본 UI 16px, URL·코드 17px, 보조 정보 14px이며 앱 설정에서 글꼴과 크기를 바꿀 수 있습니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
 
 ![로컬 API 요청과 JSON 응답 화면](docs/screenshots/desktop-response.png)
 
@@ -82,7 +82,7 @@ npm ci
 npm run dist:win
 ```
 
-타입·포맷·테스트·번들 빌드 후 `release/0.2.1/wPost-0.2.1-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
+타입·포맷·테스트·번들 빌드 후 `release/0.2.2/wPost-0.2.2-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
 
 현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
 
