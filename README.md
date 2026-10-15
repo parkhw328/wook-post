@@ -1,143 +1,17 @@
-<p align="center"><img src="assets/branding/wpost-logo.svg" width="360" alt="wPost logo"></p>
+<p align="center"><img src="assets/branding/wpost-icon.png" width="120" alt="wPost logo"></p>
 
 # wPost
 
-Windows x64에서 사용하는 로컬 API 클라이언트입니다. 요청 작성부터 응답 확인, 컬렉션 관리, 히스토리 백업까지 한국어 화면으로 제공합니다.
+Windows용 한국어 로컬 API 클라이언트.
 
-**현재 버전: 1.0.0** · 제작자: **Hyunwook Park (parkhw328@gmail.com)**
+**[Windows 다운로드](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe)** · [릴리스 정보](https://github.com/parkhw328/wook-post/releases/latest)
 
-**[Windows x64 최신 설치 파일 다운로드](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe)**
+## 문서
 
-[릴리스 정보](https://github.com/parkhw328/wook-post/releases/latest) · [SHA-256 체크섬](https://github.com/parkhw328/wook-post/releases/latest/download/wPost-x64-Setup.exe.sha256)
+- [사용 안내](docs/usage.md)
+- [개발 안내](docs/development.md)
+- [버전·배포 절차](docs/releasing.md)
+- [변경 이력](CHANGELOG.md)
+- [전체 문서](docs/README.md)
 
-GitHub Releases에는 최신 정식 버전 1개를 제공합니다. 위 링크는 새 버전이 나와도 그대로 사용할 수 있습니다.
-
-## 라이선스
-
-wPost의 자체 코드와 권리를 보유한 자산은 [MIT 라이선스](LICENSE)로 제공합니다. 저작권·라이선스 고지를 유지하면 사용·수정·재배포·상업적 이용이 가능합니다.
-
-포함된 라이브러리·글꼴·테마는 [제3자 고지](THIRD_PARTY_NOTICES.md)의 원래 라이선스를 따릅니다. 설치된 앱의 **앱 정보 → 라이선스 및 오픈소스 고지**에서도 확인할 수 있습니다. 공개·재배포 조건과 확인 범위는 [라이선스 검토 기록](docs/licensing.md)에 정리했습니다.
-
-wShell과 같은 주황색·차콜 테마의 **브라우저 창 안의 대문자 `P` 아이콘**과 Flexoki Dark 테마를 사용합니다. 기본 영문 **JetBrains Mono**, 한글 **Noto Sans KR**를 앱에 포함합니다. 기본 UI 16px, URL·코드 17px, 보조 정보 14px이며 앱 설정에서 글꼴과 크기를 바꿀 수 있습니다. [브랜딩 기준과 호환성](docs/branding.md)을 참고하세요.
-
-![로컬 API 요청과 JSON 응답 화면](docs/screenshots/desktop-response.png)
-
-## 시작하기
-
-개발 환경: Node.js **24 LTS 이상**, npm, Git. Windows 빌드 대상은 **x64**입니다.
-
-```bash
-npm ci
-npm run dev
-```
-
-로컬 API를 바로 시험하려면 별도 터미널에서 실행합니다.
-
-```bash
-npm run demo:server
-```
-
-앱에서 `http://127.0.0.1:4545/echo`를 입력하고 **전송**하세요. 외부 서비스를 사용하지 않고 메서드·헤더·본문을 확인할 수 있습니다. `Ctrl + Enter`는 전송, `Ctrl + S`는 요청 저장입니다.
-
-## 현재 기능
-
-- GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS 및 중복 키를 지원하는 쿼리·헤더 편집.
-- JSON, 텍스트, `application/x-www-form-urlencoded` 본문.
-- Bearer Token / Basic Auth, `{{baseUrl}}` 형태의 환경 변수.
-- 컬렉션에 요청 저장, 여러 탭, 검색, 요청 취소·시간 제한·리다이렉트 설정.
-- 컬렉션 이름 변경·삭제, 삭제할 때 포함된 요청의 보존 여부 선택.
-- 영문·한글 글꼴 선택, 요청·응답 글자 크기 80–150% 조절 (슬라이더·−/+ 버튼), 미리보기·취소·기본값 복원.
-- 응답 상태·소요 시간·크기·헤더·JSON Pretty/Raw, 응답 복사와 원본 바이트 내보내기. JSON 정렬은 큰 정수·소수 표기·중복 키를 그대로 보존합니다.
-- 로컬 SQLite 히스토리와 요청 재열기. 기록은 자동 삭제하지 않으며 100건씩 불러옵니다.
-- 전체 백업, 히스토리, 단일 요청·응답 JSON 가져오기/내보내기.
-- Postman Collection v2.0/v2.1 가져오기 및 v2.1 내보내기.
-
-## 컬렉션과 화면 설정
-
-컬렉션 이름 오른쪽의 **연필**로 이름을 바꾸고 **휴지통**으로 삭제합니다. 삭제 기본값은 요청을 **분류하지 않은 요청**으로 옮기는 방식입니다. **포함된 요청도 함께 삭제**를 선택하면 해당 컬렉션의 저장된 요청도 삭제합니다. 히스토리는 유지되며 함께 삭제한 요청의 열린 탭은 미저장 상태로 남아 다시 저장할 수 있습니다.
-
-왼쪽 아래 **앱 설정**에서 영문 글꼴(JetBrains Mono·Consolas·Cascadia Code·Arial), 한글 글꼴(Noto Sans KR·맑은 고딕·돋움), 요청·응답 글자 크기(80–150%)를 슬라이더와 −/+ 버튼으로 조절합니다. 요청 URL·본문·입력 값, 응답 본문·헤더의 글씨 크기만 달라지고 메뉴·버튼·사이드바 크기는 유지됩니다. 변경은 즉시 미리 볼 수 있고 **설정 저장** 후 재실행해도 유지됩니다. 취소하거나 Esc로 닫으면 이전 설정으로 돌아갑니다. PC에 없는 글꼴은 번들 기본 글꼴로 대체합니다.
-
-화면 설정은 이 PC의 SQLite에 별도로 보관하며 요청·히스토리 백업에는 포함하지 않습니다.
-
-## 데이터 가져오기와 내보내기
-
-사이드바의 **가져오기**에서 JSON을 선택합니다. 형식·건수·지원하지 않는 항목을 확인한 후 적용합니다. 기존 데이터는 유지하고 컬렉션·환경·요청을 새 ID로 추가합니다. 동일한 히스토리는 중복 저장하지 않습니다. 어느 항목이라도 적용에 실패하면 가져오기 전체를 되돌립니다.
-
-**내보내기**에서 전체 백업 또는 히스토리를 선택합니다. 응답 영역에서는 단일 요청·응답 백업이나 원본 본문 파일을 저장할 수 있습니다. 원본 본문 파일은 JSON 백업과 달리 앱으로 다시 가져오는 형식은 아닙니다.
-
-| 형식                                  | 보존 범위                                                                  |
-| ------------------------------------- | -------------------------------------------------------------------------- |
-| wPost JSON (`schemaVersion: 1`)       | 요청, 환경, 컬렉션, 요청·응답 기록, 원본 응답 바이트, 시간·크기            |
-| Postman Collection v2.0/v2.1 가져오기 | 요청, 폴더 경로, 쿼리·헤더, raw/urlencoded 본문, Bearer/Basic, 컬렉션 변수 |
-| Postman Collection v2.1 내보내기      | 저장한 요청, 컬렉션 폴더, 현재 활성 환경의 변수                            |
-
-Postman 중첩 폴더는 요청 이름에 경로로 보존합니다. 스크립트는 실행하거나 가져오지 않으며 미리보기에 알립니다. multipart·파일 본문, Postman 경로 변수, OAuth 등 미지원 인증은 가져오기를 중단합니다. Postman 파일에는 wPost의 히스토리·타임아웃·리다이렉트 설정이 보존되지 않으므로 전체 이전은 wPost 백업을 사용하세요.
-
-## 저장 위치와 한도
-
-앱의 **정보** 화면에서 실제 데이터 경로를 확인할 수 있습니다. Windows 기본 경로는 `%APPDATA%/Wook Post/wook-post.sqlite`이며 설치 파일과 분리됩니다. wPost로 이름을 바꾼 뒤에도 기존 데이터를 이어 쓰도록 이 경로를 유지합니다. SQLite WAL 파일이 있을 수 있으므로 실행 중인 DB 파일을 직접 복사하기보다 앱의 백업 기능을 사용하세요.
-
-- 토큰·비밀번호·쿠키·응답은 **평문**으로 로컬 저장소와 백업에 포함될 수 있습니다.
-- 실행 기록에는 전송 시 치환한 환경 변수 값이 저장되어 환경 변경 후에도 같은 요청을 재사용할 수 있습니다.
-- 요청 본문은 1 MiB, 수신 응답은 5 MiB까지입니다. 큰 응답은 부분 저장 사실을 화면과 백업에 표시합니다.
-- 화면 본문 미리보기는 100,000자까지이며 저장된 원본은 파일로 내보낼 수 있습니다.
-- 워크스페이스는 20 MiB, 백업 한 파일은 100 MiB / 히스토리 50,000건까지 지원합니다. 한도 초과 시 오류로 알리고 기존 데이터는 유지합니다.
-- TLS 인증서를 검증합니다. 응답 HTML은 실행하지 않으며 클라우드 동기화·자동 업로드는 없습니다.
-
-## Windows 설치 파일 만들기
-
-Windows x64 로컬 터미널에서 실행하세요.
-
-```powershell
-npm ci
-npm run dist:win
-```
-
-타입·포맷·테스트·번들 빌드 후 `release/1.0.0/wPost-1.0.0-x64-Setup.exe`와 SHA-256 체크섬을 생성합니다. 버전별 폴더를 사용해 다른 버전의 빌드를 보존합니다. [릴리스 폴더 안내](release/README.md)를 참고하세요. NSIS 기반 설치 마법사에서 설치 경로를 선택할 수 있고 바탕화면·시작 메뉴 바로가기를 제공합니다. 상용 InstallShield 프로젝트 파일은 사용하지 않습니다.
-
-현재 Linux 개발 환경에서 Windows 설치 과정은 검증하지 않았습니다. [배포 체크리스트](docs/releasing.md)로 실제 Windows 설치·업그레이드·제거를 확인해야 합니다. 코드 서명은 아직 구성하지 않았습니다.
-
-2026-10-08의 기존 Docker 빌드 정보는 [빌드 기록과 체크섬](docs/builds/v0.2.0-windows.md)에 보관합니다. 이후 브랜딩 변경이 포함된 재빌드는 해당 기록의 체크섬과 다를 수 있으며, 실제 설치 파일 옆의 `.sha256` 파일로 확인합니다. 설치 파일 자체는 Git에 포함하지 않습니다.
-
-## 개발 명령
-
-| 명령                  | 용도                                         |
-| --------------------- | -------------------------------------------- |
-| `npm run dev`         | Electron 개발 실행                           |
-| `npm run build`       | 타입 검사와 프로덕션 번들 생성               |
-| `npm start`           | 빌드된 데스크톱 앱 실행                      |
-| `npm test`            | 통신·저장·변환 테스트                        |
-| `npm run test:e2e`    | 실제 Electron 창으로 기능 검증               |
-| `npm run check`       | 타입·Prettier·테스트 확인                    |
-| `npm run format`      | 소스·문서 포맷 정리                          |
-| `npm run dist:win`    | Windows x64 로컬 설치기 빌드                 |
-| `npm run icons:build` | SVG에서 PNG·ICO 재생성 (`rsvg-convert` 필요) |
-
-디스플레이 없는 Linux 테스트 환경에서는 `xvfb-run -a npm run test:e2e`를 사용합니다. 루트 컨테이너의 테스트 실행에만 샌드박스 예외를 적용하며 일반 앱 실행 설정에는 적용하지 않습니다.
-
-## 구조와 작업 기록
-
-```text
-src/main/       HTTP 통신, SQLite, 파일 변환, Electron 창 및 IPC
-src/preload/    화면에 공개하는 제한된 데스크톱 API
-src/renderer/   React 화면과 스타일
-src/shared/     데이터 타입과 런타임 검증 스키마
-tests/          실제 HTTP·저장·파일 변환 및 Electron 테스트
-scripts/        설치기·아이콘 빌드와 테스트용 API 서버
-build/          wPost 전용 SVG·PNG·ICO 아이콘
-licenses/       디자인 참조·테마·번들 글꼴 라이선스
-resources/      로컬 참고 자료 (Git 추적 제외)
-rules/rules.md  작업 원칙과 진행 기록
-docs/           제품 조사와 배포 절차
-```
-
-TypeScript strict 모드, 2칸 들여쓰기, Prettier를 사용합니다. 컴포넌트는 PascalCase, 함수·변수는 camelCase, 테스트는 `*.test.ts`와 E2E의 `*.spec.ts`로 작성합니다. 테스트는 외부 API 대신 로컬 서버와 임시 DB를 사용합니다.
-
-[작업 기록](rules/rules.md) · [변경 이력](CHANGELOG.md) · [경쟁 제품 조사](docs/benchmark.md) · [버전·배포 절차](docs/releasing.md)
-
-공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 라이선스 및 오픈소스 고지**로 확인할 수 있습니다.
-
-`0.2.0`의 [기능·호환성 점검 결과](docs/reviews/v0.2.0.md)와 `0.1.0`의 [전체 점검 기록](docs/reviews/v0.1.0.md)을 확인할 수 있습니다.
-
-브랜드 원본과 이미지 생성 기록은 [브랜딩 자산 문서](assets/branding/README.md)를 참고하세요.
+[MIT 라이선스](LICENSE) · [제3자 고지](THIRD_PARTY_NOTICES.md)
