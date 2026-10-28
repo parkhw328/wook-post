@@ -3,6 +3,8 @@ import { Plus, Trash2, X } from 'lucide-react'
 import type { Pair } from '../../shared/contracts'
 import { newPair } from '../../shared/models'
 import { formatJson } from '../../shared/json'
+import { HEADER_NAMES, headerValues } from '../../shared/headers'
+import { AutocompleteInput } from './AutocompleteInput'
 
 export function Modal({
   title,
@@ -48,12 +50,14 @@ export function PairEditor({
   label,
   keyPlaceholder = 'Key',
   valuePlaceholder = 'Value',
+  headerAutocomplete = false,
 }: {
   pairs: Pair[]
   onChange: (pairs: Pair[]) => void
   label: string
   keyPlaceholder?: string
   valuePlaceholder?: string
+  headerAutocomplete?: boolean
 }) {
   const update = (index: number, patch: Partial<Pair>) =>
     onChange(pairs.map((pair, position) => (position === index ? { ...pair, ...patch } : pair)))
@@ -73,20 +77,48 @@ export function PairEditor({
             onChange={(event) => update(index, { enabled: event.target.checked })}
             aria-label={`${label} ${index + 1} 활성화`}
           />
-          <input
-            aria-label={`${label} ${index + 1} 키`}
-            value={pair.key}
-            placeholder={keyPlaceholder}
-            onChange={(event) => update(index, { key: event.target.value })}
-            spellCheck={false}
-          />
-          <input
-            aria-label={`${label} ${index + 1} 값`}
-            value={pair.value}
-            placeholder={valuePlaceholder}
-            onChange={(event) => update(index, { value: event.target.value })}
-            spellCheck={false}
-          />
+          {headerAutocomplete ? (
+            <AutocompleteInput
+              label={`${label} ${index + 1} 키`}
+              value={pair.key}
+              placeholder={keyPlaceholder}
+              options={HEADER_NAMES.filter(
+                (name) =>
+                  !pairs.some(
+                    (other) =>
+                      other.id !== pair.id &&
+                      other.enabled &&
+                      other.key.trim().toLowerCase() === name.toLowerCase(),
+                  ),
+              )}
+              onChange={(key) => update(index, { key })}
+            />
+          ) : (
+            <input
+              aria-label={`${label} ${index + 1} 키`}
+              value={pair.key}
+              placeholder={keyPlaceholder}
+              onChange={(event) => update(index, { key: event.target.value })}
+              spellCheck={false}
+            />
+          )}
+          {headerAutocomplete ? (
+            <AutocompleteInput
+              label={`${label} ${index + 1} 값`}
+              value={pair.value}
+              placeholder={valuePlaceholder}
+              options={headerValues(pair.key)}
+              onChange={(value) => update(index, { value })}
+            />
+          ) : (
+            <input
+              aria-label={`${label} ${index + 1} 값`}
+              value={pair.value}
+              placeholder={valuePlaceholder}
+              onChange={(event) => update(index, { value: event.target.value })}
+              spellCheck={false}
+            />
+          )}
           <button
             className="icon-button"
             onClick={() => onChange(pairs.filter((_, position) => position !== index))}

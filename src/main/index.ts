@@ -7,6 +7,8 @@ import { z } from 'zod'
 import {
   backupSchema,
   MAX_TRANSFER_BYTES,
+  MAX_UPLOAD_BYTES,
+  MAX_UPLOAD_FILES,
   requestSchema,
   workspaceSchema,
   type Backup,
@@ -14,6 +16,7 @@ import {
 } from '../shared/contracts'
 import { Store } from './store'
 import { executeRequest } from './http'
+import { inspectAttachment } from './uploads'
 import { atomicWrite, exportPostman, parseImport, readImport } from './transfers'
 
 let window: BrowserWindow | null = null
@@ -124,6 +127,20 @@ function registerHandlers() {
       environments: parsed.backup.workspace?.environments.length ?? 0,
       warnings: parsed.warnings,
     }
+  })
+  handle('file:select-attachments', async (input: unknown) => {
+    const multiple = z.boolean().parse(input)
+    const result = await dialog.showOpenDialog(window!, {
+      title: '요청에 첨부할 파일 선택',
+      properties: multiple ? ['openFile', 'multiSelections'] : ['openFile'],
+    })
+    if (result.canceled || !result.filePaths.length) return null
+    if (result.filePaths.length > (multiple ? MAX_UPLOAD_FILES : 1))
+      throw new Error('첨부 파일은 요청당 100개까지 지원합니다.')
+    const files = await Promise.all(result.filePaths.map(inspectAttachment))
+    if (files.reduce((size, file) => size + file.size!, 0) > MAX_UPLOAD_BYTES)
+      throw new Error('첨부 파일은 합계 100 MiB까지 지원합니다.')
+    return files
   })
   handle('file:apply-import', (input: unknown) => {
     const token = z.string().uuid().parse(input)

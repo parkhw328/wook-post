@@ -5,7 +5,10 @@ export {
   METHODS,
   MAX_BODY_BYTES,
   MAX_TRANSFER_BYTES,
+  MAX_UPLOAD_BYTES,
+  MAX_UPLOAD_FILES,
   newPair,
+  newMultipartField,
   newRequest,
   emptyWorkspace,
 } from './models'
@@ -17,6 +20,21 @@ export const pairSchema = z.object({
   enabled: z.boolean(),
 })
 export type Pair = z.infer<typeof pairSchema>
+export const attachmentSchema = z.object({
+  path: z
+    .string()
+    .min(1)
+    .max(32_768)
+    .refine((value) => !value.includes('\0')),
+  name: z.string().min(1).max(1024),
+  size: z.number().int().nonnegative().nullable(),
+})
+export type Attachment = z.infer<typeof attachmentSchema>
+export const multipartFieldSchema = pairSchema.extend({
+  type: z.enum(['text', 'file']),
+  files: z.array(attachmentSchema).max(100),
+})
+export type MultipartField = z.infer<typeof multipartFieldSchema>
 export const authSchema = z.object({
   type: z.enum(['none', 'bearer', 'basic']),
   token: z.string().max(16_384),
@@ -31,9 +49,11 @@ export const requestSchema = z.object({
   url: z.string().max(16_384),
   params: z.array(pairSchema).max(200),
   headers: z.array(pairSchema).max(200),
-  bodyMode: z.enum(['none', 'json', 'text', 'form']),
+  bodyMode: z.enum(['none', 'json', 'text', 'form', 'multipart', 'binary']),
   body: z.string().max(1_048_576),
   form: z.array(pairSchema).max(200),
+  multipart: z.array(multipartFieldSchema).max(200).default([]),
+  binaryFile: attachmentSchema.nullable().default(null),
   auth: authSchema,
   timeoutMs: z.number().int().min(100).max(120_000),
   followRedirects: z.boolean(),
@@ -150,6 +170,7 @@ export type DesktopApi = {
   copyResponse: (id: string) => Promise<void>
   listHistory: (offset: number) => Promise<HistorySummary[]>
   clearHistory: () => Promise<AppState>
+  selectFiles: (multiple: boolean) => Promise<Attachment[] | null>
   previewImport: () => Promise<ImportPreview | null>
   applyImport: (token: string) => Promise<AppState>
   exportData: (options: ExportOptions) => Promise<string | null>

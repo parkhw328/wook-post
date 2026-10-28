@@ -22,4 +22,4 @@
 ## 검증과 빌드 기록
 
 - 기능·호환성 점검: [0.2.0](reviews/v0.2.0.md) · [0.1.0](reviews/v0.1.0.md)
-- Windows 빌드: [0.2.0](builds/v0.2.0-windows.md) · [0.1.0](builds/v0.1.0-windows.md) · [0.1.0-alpha.2](builds/v0.1.0-alpha.2-windows.md) · [0.1.0-alpha.1](builds/v0.1.0-alpha.1-windows.md)
+- Windows 빌드: [1.1.0](builds/v1.1.0-windows.md) · [0.2.0](builds/v0.2.0-windows.md) · [0.1.0](builds/v0.1.0-windows.md) · [0.1.0-alpha.2](builds/v0.1.0-alpha.2-windows.md) · [0.1.0-alpha.1](builds/v0.1.0-alpha.1-windows.md)

@@ -8,6 +8,7 @@ import {
   METHODS,
   newPair,
   newRequest,
+  type Attachment,
   type Backup,
   type RequestDraft,
   type Workspace,
@@ -18,6 +19,20 @@ const postmanPair = z.object({
   value: z.union([z.string(), z.number(), z.boolean()]).optional(),
   disabled: z.boolean().optional(),
 })
+const postmanFormField = postmanPair.extend({
+  type: z.enum(['text', 'file']).optional(),
+  src: z.union([z.string(), z.array(z.string()), z.null()]).optional(),
+  contentType: z.string().optional(),
+})
+const attachmentFromPath = (path: string): Attachment => ({
+  path,
+  name: path.split(/[\\/]/).pop() || path,
+  size: null,
+})
+const attachmentWarning =
+  '첨부 파일은 경로만 가져옵니다. 전송 전에 경로를 확인하고, 다른 PC 또는 상대 경로의 파일은 다시 선택하세요. 파일 내용은 백업에 포함되지 않습니다.'
+const hasAttachments = (draft: RequestDraft) =>
+  !!draft.binaryFile || draft.multipart.some((field) => field.type === 'file')
 const postmanAuth = z
   .object({
     type: z.string(),
@@ -46,6 +61,9 @@ const postmanRequest = z.object({
       mode: z.string().optional(),
       raw: z.string().optional(),
       urlencoded: z.array(postmanPair).optional(),
+      formdata: z.array(postmanFormField).optional(),
+      file: z.object({ src: z.string().nullable().optional() }).optional(),
+      disabled: z.boolean().optional(),
       options: z
         .object({ raw: z.object({ language: z.string().optional() }).optional() })
         .optional(),
@@ -106,7 +124,15 @@ export function parseImport(
       )
         throw new Error('백업 응답 본문의 바이트 또는 크기가 일치하지 않습니다. 파일을 확인하세요.')
     }
-    return { backup: result.data, format: 'wPost v1', warnings: [] }
+    const requests = [
+      ...(result.data.workspace?.requests ?? []),
+      ...result.data.history.map((entry) => entry.request),
+    ]
+    return {
+      backup: result.data,
+      format: 'wPost v1',
+      warnings: requests.some(hasAttachments) ? [attachmentWarning] : [],
+    }
   }
   const parsed = postmanCollection.safeParse(data)
   if (!parsed.success)
@@ -144,7 +170,10 @@ export function parseImport(
       const request = postmanRequest.parse(raw)
       if (!METHODS.includes(request.method as RequestDraft['method']))
         throw new Error(`지원하지 않는 HTTP 메서드: ${request.method}`)
-      if (request.body?.mode && !['raw', 'urlencoded'].includes(request.body.mode))
+      if (
+        request.body?.mode &&
+        !['raw', 'urlencoded', 'formdata', 'file'].includes(request.body.mode)
+      )
         throw new Error(
           `"${item.name}": ${request.body.mode} 본문은 아직 지원하지 않습니다. 가져오기를 취소했습니다.`,
         )
@@ -194,7 +223,29 @@ export function parseImport(
       } else if (request.body?.mode === 'urlencoded') {
         draft.bodyMode = 'form'
         draft.form = pairs(request.body.urlencoded)
+      } else if (request.body?.mode === 'formdata') {
+        draft.bodyMode = 'multipart'
+        draft.multipart = (request.body.formdata ?? []).map((field) => ({
+          ...newPair(field.key, String(field.value ?? '')),
+          enabled: !field.disabled,
+          type: field.type ?? 'text',
+          files:
+            field.type === 'file'
+              ? (Array.isArray(field.src) ? field.src : field.src ? [field.src] : [])
+                  .filter(Boolean)
+                  .map(attachmentFromPath)
+              : [],
+        }))
+        if (request.body.formdata?.some((field) => field.contentType))
+          warnings.add(
+            '폼 필드별 Content-Type은 가져오지 않습니다. 파일 형식은 확장자로 결정됩니다.',
+          )
+      } else if (request.body?.mode === 'file') {
+        draft.bodyMode = 'binary'
+        draft.binaryFile = request.body.file?.src ? attachmentFromPath(request.body.file.src) : null
       }
+      if (hasAttachments(draft) || draft.bodyMode === 'binary') warnings.add(attachmentWarning)
+      if (request.body?.disabled) draft.bodyMode = 'none'
       workspace.requests.push(draft)
     }
   }
@@ -261,11 +312,27 @@ export function exportPostman(workspace: Workspace) {
               body:
                 draft.bodyMode === 'form'
                   ? { mode: 'urlencoded', urlencoded: pairs(draft.form) }
-                  : {
-                      mode: 'raw',
-                      raw: draft.body,
-                      options: { raw: { language: draft.bodyMode === 'json' ? 'json' : 'text' } },
-                    },
+                  : draft.bodyMode === 'multipart'
+                    ? {
+                        mode: 'formdata',
+                        formdata: draft.multipart.map((field) => ({
+                          key: field.key,
+                          type: field.type,
+                          disabled: !field.enabled,
+                          ...(field.type === 'file'
+                            ? { src: field.files.map((file) => file.path) }
+                            : { value: field.value }),
+                        })),
+                      }
+                    : draft.bodyMode === 'binary'
+                      ? { mode: 'file', file: { src: draft.binaryFile?.path ?? null } }
+                      : {
+                          mode: 'raw',
+                          raw: draft.body,
+                          options: {
+                            raw: { language: draft.bodyMode === 'json' ? 'json' : 'text' },
+                          },
+                        },
             }),
       },
     }

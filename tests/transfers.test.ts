@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { atomicWrite, exportPostman, parseImport } from '../src/main/transfers'
-import { emptyWorkspace, newPair, newRequest } from '../src/shared/contracts'
+import { emptyWorkspace, newMultipartField, newPair, newRequest } from '../src/shared/contracts'
 import { backupFor, historyEntry } from './fixtures'
 
 const info = {
@@ -11,6 +11,108 @@ const info = {
   schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
 }
 describe('import and export', () => {
+  it('round-trips multipart and binary paths through native and Postman backups', () => {
+    const file = { path: 'C:\\한글 폴더\\photo.png', name: 'photo.png', size: 12 }
+    const multipart = {
+      ...newRequest(),
+      method: 'POST' as const,
+      url: 'https://example.test',
+      bodyMode: 'multipart' as const,
+      multipart: [
+        { ...newMultipartField(), key: 'tag', value: '한글' },
+        { ...newMultipartField(), key: 'tag', value: 'second', enabled: false },
+        { ...newMultipartField('file'), key: 'files', files: [file, file] },
+      ],
+    }
+    const binary = {
+      ...newRequest(),
+      url: 'https://example.test',
+      method: 'PUT' as const,
+      bodyMode: 'binary' as const,
+      binaryFile: file,
+    }
+    const workspace = { ...emptyWorkspace(), requests: [multipart, binary] }
+    const native = { ...backupFor(), scope: 'workspace', workspace }
+    const parsed = parseImport(JSON.stringify(native), '1.1.0')
+    expect(parsed.backup).toEqual(native)
+    expect(parsed.warnings.join(' ')).toContain('경로')
+    const postman = parseImport(JSON.stringify(exportPostman(workspace)), '1.1.0')
+    const requests = postman.backup.workspace!.requests
+    expect(requests[0].multipart.map(({ id: _id, ...field }) => field)).toEqual(
+      multipart.multipart.map(({ id: _id, ...field }) => ({
+        ...field,
+        files: field.files.map((file) => ({ ...file, size: null })),
+      })),
+    )
+    expect(requests[1].bodyMode).toBe('binary')
+    expect(requests[1].binaryFile).toEqual({ ...file, size: null })
+    expect(postman.warnings.join(' ')).toContain('경로')
+  })
+  it('imports Postman single-file paths, empty file selections and disabled bodies explicitly', () => {
+    const data = {
+      info,
+      item: [
+        {
+          name: 'single',
+          request: {
+            method: 'POST',
+            url: 'https://example.test',
+            body: {
+              mode: 'formdata',
+              formdata: [
+                { key: 'upload', type: 'file', src: 'relative.txt', disabled: true },
+                { key: 'empty', type: 'file', src: null },
+              ],
+            },
+          },
+        },
+        {
+          name: 'empty binary',
+          request: {
+            method: 'PUT',
+            url: 'https://example.test',
+            body: { mode: 'file', file: { src: null } },
+          },
+        },
+        {
+          name: 'disabled',
+          request: {
+            method: 'GET',
+            url: 'https://example.test',
+            body: { mode: 'file', file: { src: 'test.bin' }, disabled: true },
+          },
+        },
+      ],
+    }
+    const requests = parseImport(JSON.stringify(data), '1.1.0').backup.workspace!.requests
+    expect(requests[0].multipart[0]).toMatchObject({
+      enabled: false,
+      files: [{ path: 'relative.txt', name: 'relative.txt', size: null }],
+    })
+    expect(requests[0].multipart[1].files).toEqual([])
+    expect(requests[1]).toMatchObject({ bodyMode: 'binary', binaryFile: null })
+    expect(requests[2].bodyMode).toBe('none')
+  })
+  it('loads pre-upload native backups without losing existing request data', () => {
+    const { multipart: _multipart, binaryFile: _binaryFile, ...legacy } = newRequest()
+    legacy.bodyMode = 'form'
+    legacy.form = [newPair('old', '한글')]
+    const entry = historyEntry()
+    const native = {
+      ...backupFor(),
+      scope: 'workspace',
+      workspace: { ...emptyWorkspace(), requests: [legacy] },
+      history: [{ ...entry, request: legacy }],
+    }
+    const parsed = parseImport(JSON.stringify(native), '1.1.0')
+    expect(parsed.backup.workspace!.requests[0]).toEqual({
+      ...legacy,
+      multipart: [],
+      binaryFile: null,
+    })
+    expect(parsed.backup.history[0].request).toEqual({ ...legacy, multipart: [], binaryFile: null })
+    expect(parsed.warnings).toEqual([])
+  })
   it('round-trips native requests, headers, timings and response bytes exactly', () => {
     const backup = backupFor([historyEntry()])
     const parsed = parseImport('\uFEFF' + JSON.stringify(backup), '0.1.0-alpha.1')
@@ -80,7 +182,7 @@ describe('import and export', () => {
     expect(parsed.warnings.some((warning) => warning.includes('스크립트'))).toBe(true)
   })
   it('rejects unsupported auth or bodies instead of silently changing request semantics', () => {
-    for (const extra of [{ body: { mode: 'formdata' } }, { auth: { type: 'oauth2' } }]) {
+    for (const extra of [{ body: { mode: 'graphql' } }, { auth: { type: 'oauth2' } }]) {
       expect(() =>
         parseImport(
           JSON.stringify({

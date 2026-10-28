@@ -20,6 +20,26 @@ afterEach(() => {
 })
 
 describe('local persistence', () => {
+  it('opens a v1 database with legacy request and history JSON without upload fields', () => {
+    const request = { ...newRequest(), url: 'https://example.test', body: 'preserved' }
+    const entry = historyEntry({ request })
+    store.saveWorkspace({ ...emptyWorkspace(), requests: [request] })
+    store.addHistory(entry)
+    store.close()
+    const { multipart: _multipart, binaryFile: _binaryFile, ...legacy } = request
+    const db = new DatabaseSync(join(directory, 'test.sqlite'))
+    db.prepare('UPDATE workspace SET data = ? WHERE id = 1').run(
+      JSON.stringify({ ...emptyWorkspace(), requests: [legacy] }),
+    )
+    db.prepare('UPDATE history SET data = ? WHERE id = ?').run(
+      JSON.stringify({ ...entry, request: legacy }),
+      entry.id,
+    )
+    db.close()
+    store = new Store(join(directory, 'test.sqlite'))
+    expect(store.getWorkspace().requests[0]).toEqual(request)
+    expect(store.getHistory(entry.id)).toEqual(entry)
+  })
   it('defaults appearance on an existing database and retains saved preferences across restarts', () => {
     const workspace = { ...emptyWorkspace(), requests: [newRequest()] }
     store.saveWorkspace(workspace)

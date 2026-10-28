@@ -8,6 +8,7 @@ import {
   type RequestDraft,
   type ResponseResult,
 } from '../shared/contracts'
+import { prepareUpload } from './uploads'
 
 export function prepareRequest(input: RequestDraft, environment?: Environment) {
   const draft = requestSchema.parse(input)
@@ -68,7 +69,7 @@ export function prepareRequest(input: RequestDraft, environment?: Environment) {
   }
   if (body && Buffer.byteLength(body) > 1_048_576)
     throw new Error('요청 본문은 1 MiB까지 지원합니다.')
-  // Freeze the values actually sent so history replay does not depend on a changed environment.
+  // Resolve values for replay; attachments retain paths and are read again on each send.
   const snapshot: RequestDraft = {
     ...draft,
     url: url.toString(),
@@ -77,6 +78,24 @@ export function prepareRequest(input: RequestDraft, environment?: Environment) {
     auth,
     body: body ?? '',
     form,
+    multipart:
+      draft.bodyMode === 'multipart'
+        ? draft.multipart
+            .filter((field) => field.enabled && field.key)
+            .map((field) => ({
+              ...field,
+              key: resolve(field.key),
+              value: field.type === 'text' ? resolve(field.value) : '',
+              files:
+                field.type === 'file'
+                  ? field.files.map((file) => ({ ...file, path: resolve(file.path) }))
+                  : [],
+            }))
+        : [],
+    binaryFile:
+      draft.bodyMode === 'binary' && draft.binaryFile
+        ? { ...draft.binaryFile, path: resolve(draft.binaryFile.path) }
+        : null,
   }
   return { url: url.toString(), headers, body, snapshot: requestSchema.parse(snapshot) }
 }
@@ -106,10 +125,14 @@ export async function executeRequest(
     truncated: false,
   }
   try {
+    const body =
+      draft.bodyMode === 'multipart' || draft.bodyMode === 'binary'
+        ? await prepareUpload(prepared.snapshot, prepared.headers, combined)
+        : prepared.body
     const result = await fetch(prepared.url, {
       method: draft.method,
       headers: prepared.headers,
-      body: prepared.body,
+      body,
       redirect: draft.followRedirects ? 'follow' : 'manual',
       signal: combined,
     })

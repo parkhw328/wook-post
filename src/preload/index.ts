@@ -12,6 +12,7 @@ const api: DesktopApi = {
   copyResponse: (id) => ipcRenderer.invoke('response:copy', id),
   listHistory: (offset) => ipcRenderer.invoke('history:list', offset),
   clearHistory: () => ipcRenderer.invoke('history:clear'),
+  selectFiles: (multiple) => ipcRenderer.invoke('file:select-attachments', multiple),
   previewImport: () => ipcRenderer.invoke('file:preview-import'),
   applyImport: (token) => ipcRenderer.invoke('file:apply-import', token),
   exportData: (options) => ipcRenderer.invoke('file:export', options),

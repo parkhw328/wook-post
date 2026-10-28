@@ -36,12 +36,19 @@ import type {
   RequestDraft,
   Workspace,
 } from '../../shared/contracts'
-import { emptyWorkspace, METHODS, newPair, newRequest } from '../../shared/models'
+import {
+  emptyWorkspace,
+  METHODS,
+  newMultipartField,
+  newPair,
+  newRequest,
+} from '../../shared/models'
 import { formatJson } from '../../shared/json'
 import { deleteCollection, renameCollection } from '../../shared/collections'
 import { appearanceFontFamily, defaultAppearance, type Appearance } from '../../shared/appearance'
 import { AppearanceSettings } from './AppearanceSettings'
 import { formatBytes, JsonView, Modal, PairEditor } from './components'
+import { FilePicker, UploadEditor } from './UploadEditor'
 import brandIcon from '../../../build/icon.png'
 import flexokiLicense from '../../../licenses/Flexoki-MIT.txt?raw'
 import fontLicense from '../../../licenses/JetBrainsMono-OFL.txt?raw'
@@ -817,7 +824,9 @@ export function App() {
               </button>
             </div>
           </div>
-          <div className="request-editor">
+          <div
+            className={`request-editor ${section === 'body' && draft.bodyMode === 'multipart' ? 'has-multipart' : ''}`}
+          >
             <div className="request-titlebar">
               <div className="request-breadcrumb">
                 <Folder size={14} />
@@ -935,6 +944,23 @@ export function App() {
                   <p className="editor-note">
                     활성화한 파라미터를 URL의 기존 쿼리 뒤에 추가합니다.
                   </p>
+                  <div className="upload-shortcut">
+                    <span>파일과 폼 파라미터는 본문의 Form Data로 전송합니다.</span>
+                    <button
+                      className="secondary-button"
+                      onClick={() => {
+                        updateDraft({
+                          bodyMode: 'multipart',
+                          multipart: draft.multipart.length
+                            ? draft.multipart
+                            : [newMultipartField('file')],
+                        })
+                        setSection('body')
+                      }}
+                    >
+                      파일 첨부 설정
+                    </button>
+                  </div>
                 </>
               )}
               {section === 'headers' && (
@@ -945,9 +971,12 @@ export function App() {
                     onChange={(headers) => updateDraft({ headers })}
                     keyPlaceholder="Content-Type"
                     valuePlaceholder="application/json"
+                    headerAutocomplete
                   />
                   <p className="editor-note">
-                    Content-Type은 본문 유형에 맞게 자동 설정됩니다. 직접 입력한 값이 우선합니다.
+                    헤더 이름과 값은 ↑↓ · Enter / Tab으로 완성할 수 있습니다. 직접 입력도
+                    가능합니다. Content-Type은 본문에 맞게 설정되며, Form Data는 boundary를 자동
+                    생성합니다.
                   </p>
                 </>
               )}
@@ -960,6 +989,8 @@ export function App() {
                         ['json', 'JSON'],
                         ['text', 'Text'],
                         ['form', 'Form URL Encoded'],
+                        ['multipart', 'Form Data'],
+                        ['binary', 'Binary 파일'],
                       ] as const
                     ).map(([mode, label]) => (
                       <label key={mode}>
@@ -999,6 +1030,42 @@ export function App() {
                       pairs={draft.form}
                       onChange={(form) => updateDraft({ form })}
                     />
+                  ) : draft.bodyMode === 'multipart' ? (
+                    <>
+                      <UploadEditor
+                        key={draft.id}
+                        fields={draft.multipart}
+                        onChange={(multipart) => updateDraft({ multipart })}
+                        onError={fail}
+                      />
+                      <p className="editor-note">
+                        텍스트와 여러 파일을 함께 전송합니다. 파일·폼 값 합계 100 MiB, 파일 최대
+                        100개. Content-Type·전송 길이는 자동 설정됩니다.
+                      </p>
+                      <p className="editor-note">
+                        요청·히스토리·백업에는 파일 경로만 저장됩니다. 재전송 시 현재 파일을
+                        읽으므로 이동하거나 삭제했다면 다시 선택하세요.
+                      </p>
+                    </>
+                  ) : draft.bodyMode === 'binary' ? (
+                    <>
+                      <FilePicker
+                        key={draft.id}
+                        label="바이너리 본문"
+                        files={draft.binaryFile ? [draft.binaryFile] : []}
+                        onChange={(files) => updateDraft({ binaryFile: files[0] ?? null })}
+                        onError={fail}
+                      />
+                      <p className="editor-note">
+                        선택한 파일의 원본 바이트를 본문으로 전송합니다 (최대 100 MiB).
+                        Content-Type은 확장자로 설정하며 헤더에서 변경할 수 있습니다. 전송 길이는
+                        자동 계산됩니다.
+                      </p>
+                      <p className="editor-note">
+                        파일 내용은 백업에 포함되지 않습니다. 재전송할 때 같은 경로에 파일이 있어야
+                        합니다.
+                      </p>
+                    </>
                   ) : (
                     <textarea
                       className="body-editor"
