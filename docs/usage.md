@@ -22,9 +22,15 @@
 
 **헤더 → 헤더 추가**에서 이름을 입력하면 `Content-Type`, `Authorization`, `Accept` 등 알려진 헤더를 추천합니다. 대소문자를 구분하지 않으며, 이미 활성화한 헤더 이름은 다른 행의 추천에서 제외합니다. 값에도 해당 헤더에 맞는 MIME 유형·인증 접두사·캐시 설정 등을 추천합니다.
 
-마우스로 클릭하거나 **↑↓**로 선택한 뒤 **Enter / Tab**으로 완성하세요. **Esc**로 목록을 닫을 수 있고, 사용자 정의 이름·값과 `{{변수}}`도 직접 입력할 수 있습니다.
+**값 칸 또는 오른쪽 ▼**를 누르면 해당 헤더의 전체 후보를 볼 수 있습니다. 예를 들어 `Content-Type`에는 `application/json`, `application/xml`, `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain; charset=utf-8`, `image/png` 등이 표시됩니다. `Accept`, `Authorization`, `Accept-Encoding`, `Accept-Language`, `Cache-Control` 등에도 각각 알맞은 값을 제공합니다.
+
+긴 목록은 스크롤하고, `json`, `image/`, `utf-8` 등을 입력하면 후보를 검색합니다. 마우스로 클릭하거나 **↑↓**로 선택한 뒤 **Enter / Tab**으로 완성하세요. 이미 입력한 값도 다시 클릭하면 전체 후보를 볼 수 있습니다. 목록만 살펴보고 Tab으로 이동하면 원래 값은 유지됩니다.
+
+**Esc**로 목록을 닫을 수 있고, 사용자 정의 이름·값과 `{{변수}}`도 직접 입력할 수 있습니다. 이름과 값은 자유롭게 편집할 수 있으며 추천 항목으로 제한하지 않습니다.
 
 ![헤더 자동완성](screenshots/header-autocomplete.png)
+
+![Content-Type 값 추천](screenshots/header-value-autocomplete.png)
 
 ## 파일과 폼 파라미터 보내기
 

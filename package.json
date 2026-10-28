@@ -1,6 +1,6 @@
 {
   "name": "wook-post",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "wPost — a local desktop HTTP client for Windows",
   "main": "out/main/index.js",
   "author": {

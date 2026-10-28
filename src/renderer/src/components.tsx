@@ -106,8 +106,9 @@ export function PairEditor({
             <AutocompleteInput
               label={`${label} ${index + 1} 값`}
               value={pair.value}
-              placeholder={valuePlaceholder}
+              placeholder={headerValues(pair.key)[0] ?? '값 또는 {{변수}}'}
               options={headerValues(pair.key)}
+              browseValues
               onChange={(value) => update(index, { value })}
             />
           ) : (

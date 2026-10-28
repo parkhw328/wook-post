@@ -758,6 +758,25 @@ kbd {
   background: var(--surface);
   box-shadow: 0 6px 24px #0006;
 }
+.autocomplete-input {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.autocomplete-input input {
+  flex: 1;
+}
+.autocomplete-toggle {
+  flex-shrink: 0;
+  width: 32px;
+  min-height: 36px;
+  color: var(--muted);
+}
+.autocomplete-toggle:hover,
+.autocomplete-toggle[aria-expanded='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
 .autocomplete-menu button {
   display: block;
   width: 100%;
@@ -859,7 +878,8 @@ kbd {
   min-height: 44px;
   border-top: 1px solid var(--border);
 }
-.pair-row > input {
+.pair-row > input,
+.pair-row .autocomplete-input input {
   min-width: 0;
   width: 100%;
   padding: 8px 5px 8px 0;
@@ -871,7 +891,8 @@ kbd {
   height: 16px;
   margin: 0 10px;
 }
-.pair-row > input:nth-child(3) {
+.pair-row > input:nth-child(3),
+.pair-row > .autocomplete-input:nth-child(3) {
   border-left: 1px solid var(--border);
   padding-left: 12px;
 }
@@ -933,6 +954,7 @@ kbd {
   tab-size: 2;
 }
 .editor-content .pair-row > input:not([type='checkbox']),
+.editor-content .autocomplete-input input,
 .auth-panel .field-input {
   font-size: calc(16px * var(--content-scale));
 }

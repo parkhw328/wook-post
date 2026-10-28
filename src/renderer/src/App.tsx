@@ -974,9 +974,9 @@ export function App() {
                     headerAutocomplete
                   />
                   <p className="editor-note">
-                    헤더 이름과 값은 ↑↓ · Enter / Tab으로 완성할 수 있습니다. 직접 입력도
-                    가능합니다. Content-Type은 본문에 맞게 설정되며, Form Data는 boundary를 자동
-                    생성합니다.
+                    값 칸 또는 ▼를 누르면 헤더별 추천 값을 모두 볼 수 있습니다. 입력하여 검색하고 ↑↓
+                    · Enter / Tab으로 선택하세요. 직접 입력도 가능합니다. Content-Type은 본문에 맞게
+                    설정되며, Form Data는 boundary를 자동 생성합니다.
                   </p>
                 </>
               )}
