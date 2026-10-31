@@ -2,6 +2,10 @@
 
 [문서 목록](README.md) · [프로젝트 홈](../README.md)
 
+## 작업 시작 전
+
+새 작업 지시를 받거나 컨텍스트가 초기화된 뒤 작업을 재개하면 [작업 규칙](../rules/rules.md), [누적 요구사항](../rules/requirements.md) 순서로 먼저 읽습니다. 최신 요청과 이전 요청의 변경 여부를 확인한 뒤 계획·수정·명령 실행을 시작합니다. 새 요구사항은 `rules/requirements.md`, 구현·검증·남은 일은 `rules/rules.md`와 `CHANGELOG.md`에 기록합니다.
+
 ## 시작하기
 
 개발 환경: Node.js **24 LTS 이상**, npm, Git. Windows 빌드 대상은 **x64**입니다.
@@ -62,13 +66,13 @@ scripts/        설치기·아이콘 빌드와 테스트용 API 서버
 build/          wPost 전용 SVG·PNG·ICO 아이콘
 licenses/       디자인 참조·테마·번들 글꼴 라이선스
 resources/      로컬 참고 자료 (Git 추적 제외)
-rules/rules.md  작업 원칙과 진행 기록
+rules/          작업 규칙·진행 기록 (rules.md), 누적 사용자 요구사항 (requirements.md)
 docs/           제품 조사와 배포 절차
 ```
 
 TypeScript strict 모드, 2칸 들여쓰기, Prettier를 사용합니다. 컴포넌트는 PascalCase, 함수·변수는 camelCase, 테스트는 `*.test.ts`와 E2E의 `*.spec.ts`로 작성합니다. 테스트는 외부 API 대신 로컬 서버와 임시 DB를 사용합니다.
 
-[작업 기록](../rules/rules.md) · [변경 이력](../CHANGELOG.md) · [경쟁 제품 조사](benchmark.md) · [버전·배포 절차](releasing.md)
+[작업 기록](../rules/rules.md) · [누적 요구사항](../rules/requirements.md) · [변경 이력](../CHANGELOG.md) · [경쟁 제품 조사](benchmark.md) · [버전·배포 절차](releasing.md)
 
 공유 디자인 자산의 출처와 라이선스는 [디자인 자산 고지](../THIRD_PARTY_NOTICES.md)에 기록합니다. 설치된 앱에서도 **앱 정보 → 라이선스 및 오픈소스 고지**로 확인할 수 있습니다.
 

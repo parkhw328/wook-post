@@ -18,6 +18,7 @@
 - [MIT 라이선스](../LICENSE) · [제3자 고지](../THIRD_PARTY_NOTICES.md)
 - [경쟁 제품 조사](benchmark.md)
 - [작업 원칙과 기록](../rules/rules.md)
+- [누적 사용자 요구사항](../rules/requirements.md)
 
 ## 검증과 빌드 기록
 

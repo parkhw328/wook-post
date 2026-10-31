@@ -56,4 +56,4 @@
 - 화면 설정은 기존 DB의 별도 `appearance` 테이블에 저장한다. 이전 버전 DB에 테이블만 추가하고 요청·환경·히스토리는 그대로 둔다. 백업에는 PC별 화면 설정을 포함하지 않는다.
 - 내부 npm 패키지 이름 `wook-post`와 IPC API `window.wook`.
 
-기존 `AGENTS.md`와 요구사항 원문은 변경하지 않는다.
+요구사항 원문과 참조 저장소는 변경하지 않는다. 새 작업의 지침은 루트 `AGENTS.md`를 따르며, [작업 규칙](../rules/rules.md)과 [누적 요구사항](../rules/requirements.md)을 먼저 읽는다.

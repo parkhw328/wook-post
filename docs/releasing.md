@@ -2,7 +2,7 @@
 
 ## 버전 올리기
 
-1. `main`을 최신 상태로 갱신한 뒤 구현하고 `rules/rules.md`와 `CHANGELOG.md`를 갱신한다. 버전별 작업 브랜치는 만들지 않는다.
+1. [작업 규칙](../rules/rules.md), [누적 요구사항](../rules/requirements.md) 순서로 먼저 읽는다. `main`을 최신 상태로 갱신한 뒤 구현하고 새로운 요구사항은 `rules/requirements.md`, 구현·검증 기록은 `rules/rules.md`와 `CHANGELOG.md`에 반영한다. 버전별 작업 브랜치는 만들지 않는다.
 2. 필요할 때 `npm version 1.0.0 --no-git-tag-version`처럼 버전을 지정한다. 앱, 설치 파일 이름, 백업 메타데이터는 `package.json`을 따른다.
 3. `npm run check`, `npm run test:e2e`로 검증한다. Linux의 디스플레이 없는 환경에서는 `xvfb-run -a npm run test:e2e`를 쓴다.
 4. Windows x64 로컬 PC에서 `npm ci` 후 `npm run dist:win`을 실행한다.
